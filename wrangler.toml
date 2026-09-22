@@ -1,14 +1,12 @@
-name = "neuro-v8"
-main = "src/worker.js"
-compatibility_date = "2026-09-20"
+# ...
+[[unsafe.bindings]]
+name = "Neuro_8"
+type = "durable_object_namespace"
+class_name = "NeuroSyncRoom"
+namespace_id = "a8bb6f32e5914b688a35d0bcc3fd7a21"
 
-[assets]
-directory = "./public"
-binding = "ASSETS"
-
-[durable_objects]
-bindings = [{ name = "NEURO_ROOM", class_name = "NeuroSyncRoom" }]
-
-[[migrations]]
-tag = "v1"
-new_sqlite_classes = ["NeuroSyncRoom"]
+[[unsafe.bindings]]
+name = "NEURO_ROOM"
+type = "durable_object_namespace"
+class_name = "NeuroSyncRoom"
+namespace_id = "a8bb6f32e5914b688a35d0bcc3fd7a21"
