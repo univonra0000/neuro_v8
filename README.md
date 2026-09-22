@@ -36,3 +36,7 @@ Use **CONNECTED PARTICIPANTS** for the live count and **CONNECT TO PEOPLE** for 
 
 ## Cloudflare build fix
 The compatibility date is set to `2026-09-22` so the deployment does not use a future date rejected by Cloudflare's API. If Cloudflare reports that date as future in your account, change it to the current/previous supported date shown by your Wrangler version.
+
+
+## Deployment override
+Use `npx wrangler deploy --compatibility-date 2026-09-20` in Cloudflare Workers Builds. The configuration also uses `2026-09-20` to avoid the future-date error shown by the user's build environment.
