@@ -1,14 +1,32 @@
-# NEURO SYNC V8 — all-in-one
+# NEURO SYNC V8 — Future Update
 
-This version puts the frontend and WebSocket/Durable Object backend in the SAME Cloudflare Worker:
+This package puts the WebSocket/Durable Object backend and frontend in the same Cloudflare Worker project.
 
-https://neuro-v8.univonra.workers.dev/
+## Included
+- Past / Present / Future-ready digital signal event flow
+- 1–20 Hz digital event control
+- Send/receive messages
+- Live connected-device count
+- Signal wave + pink neon lighting
+- Beep-beep response
+- Voice/microphone input with browser permission
+- Voice result is sent after a completed recognition result
+- Sticky ON/OFF connection control
+- Sticky menu
+- Opt-in participant location map
+- Automatic reconnect while ON
+- Single Worker `/ws` endpoint
+- No hidden location tracking
 
-WebSocket:
-wss://neuro-v8.univonra.workers.dev/ws
+## Important technical meaning
+The frequency control is a digital network event rate. A normal phone browser cannot detect or transmit actual EEG/thoughts. Real brain-signal input requires compatible EEG/BCI hardware and an appropriate integration.
 
-No separate satellite Worker is required for this version.
+## Deploy
+1. Put the files in a Cloudflare Workers project.
+2. Run `npx wrangler deploy`.
+3. Open `https://neuro-v8.univonra.workers.dev/`.
+4. Press ON.
+5. Open the same URL on another participating device and press ON.
+6. Use Message or Trigger Signal.
 
-Deploy from the repository root with Cloudflare Workers. The static app is in `public/` and the Worker backend is in `src/worker.js`.
-
-The network synchronizes digital frequency events, messages, and connected-device counts. It does not detect or transmit thoughts or EEG without external BCI/EEG hardware.
+The old `comn-setelite` relay is not required by this version.
