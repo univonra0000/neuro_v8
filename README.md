@@ -33,3 +33,6 @@ The old `comn-setelite` relay is not required by this version.
 
 ## Naming
 Use **CONNECTED PARTICIPANTS** for the live count and **CONNECT TO PEOPLE** for the user action. Do not label ordinary web connections as connected brains; actual brain-signal functions require EEG/BCI hardware.
+
+## Cloudflare build fix
+The compatibility date is set to `2026-09-22` so the deployment does not use a future date rejected by Cloudflare's API. If Cloudflare reports that date as future in your account, change it to the current/previous supported date shown by your Wrangler version.
