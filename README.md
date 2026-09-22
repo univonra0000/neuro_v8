@@ -13,7 +13,7 @@ This package puts the WebSocket/Durable Object backend and frontend in the same 
 - Voice result is sent after a completed recognition result
 - Sticky ON/OFF connection control
 - Sticky menu
-- Opt-in participant location map
+- Opt-in people/participant location map
 - Automatic reconnect while ON
 - Single Worker `/ws` endpoint
 - No hidden location tracking
@@ -30,3 +30,6 @@ The frequency control is a digital network event rate. A normal phone browser ca
 6. Use Message or Trigger Signal.
 
 The old `comn-setelite` relay is not required by this version.
+
+## Naming
+Use **CONNECTED PARTICIPANTS** for the live count and **CONNECT TO PEOPLE** for the user action. Do not label ordinary web connections as connected brains; actual brain-signal functions require EEG/BCI hardware.
