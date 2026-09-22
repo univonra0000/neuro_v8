@@ -3,55 +3,176 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#050914">
 <title>NEURO SYNC V8</title>
 <style>
-:root{--bg:#050914;--panel:#0b1226;--line:#29385f;--text:#f4f7ff;--muted:#8995b4;--cyan:#36e1d0;--blue:#7088ff;--green:#43f19a;--pink:#ff6388}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-body{min-height:100vh;display:flex;justify-content:center}.app{width:100%;max-width:520px;min-height:100vh;padding:17px 14px 28px;background:radial-gradient(circle at 50% -10%,#526dff25,transparent 40%),linear-gradient(#091021,#050914)}
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}.brand h1{font-size:24px;margin:0;font-weight:900;letter-spacing:1px}.brand p{font-size:10px;color:var(--muted);margin:4px 0;letter-spacing:1.4px}.status{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:900;color:var(--muted)}.led{width:11px;height:11px;border-radius:50%;background:var(--pink)}.led.on{background:var(--green);box-shadow:0 0 8px var(--green),0 0 20px #43f19a99;animation:blink 1s infinite}@keyframes blink{50%{opacity:.45}}
-.panel{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:25px;padding:18px 16px 19px;background:#0b1226f5}.panel:before{content:"";position:absolute;inset:-2px;border-radius:27px;padding:1.5px;background:conic-gradient(from 0deg,transparent 0 65%,#36e1d0 74%,#7088ff 82%,transparent 90%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 3s linear infinite;pointer-events:none}.panel.active:before{background:conic-gradient(from 0deg,transparent 0 27%,#43f19a 45%,#36e1d0 55%,#7088ff 66%,#ff6388 73%,transparent 82%);animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-.label{font-size:12px;color:var(--muted);font-weight:900;letter-spacing:1.2px}.connect{display:flex;align-items:center;justify-content:space-between;margin:7px 0 18px}.connect strong{font-size:16px}.connect small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.toggle{width:68px;height:38px;border:1px solid #3b486f;border-radius:99px;background:#171e36;padding:3px;cursor:pointer}.toggle i{display:block;width:30px;height:30px;border-radius:50%;background:#a6aec2;transition:.2s}.toggle.on{border-color:var(--green);box-shadow:0 0 14px #43f19a33}.toggle.on i{transform:translateX(30px);background:var(--green);box-shadow:0 0 9px var(--green),0 0 20px #43f19a88}
-.hz{text-align:center;font-size:64px;font-weight:900;line-height:1;margin:15px 0 2px}.unit{text-align:center;color:var(--muted);font-size:12px;margin-bottom:14px}input[type=range]{width:100%;accent-color:var(--cyan)}.range{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:6px}
-.message{display:flex;gap:7px;margin-top:17px}.message input{flex:1;min-width:0;height:49px;border:1px solid #344064;border-radius:14px;background:#080e20;color:var(--text);padding:0 12px;outline:none}.message button,.actions button{height:49px;border-radius:14px;font-weight:900;cursor:pointer}.message button{width:92px;border:0;background:linear-gradient(100deg,#7088ff,#36d9cf);color:#050914}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.actions button{border:1px solid #344064;background:#111a31;color:var(--text)}.actions .active{border-color:var(--green);box-shadow:0 0 15px #43f19a22}
-.signal{margin-top:14px;padding:12px;border:1px solid #28375e;border-radius:16px;background:#080e20;text-align:center}.bar{height:5px;background:#1e2a4b;border-radius:99px;overflow:hidden;margin-top:9px}.bar b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green));transition:width .15s}.particles{height:42px;position:relative;overflow:hidden}.particle{position:absolute;bottom:2px;width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 9px var(--cyan);animation:particle .8s linear forwards}@keyframes particle{to{transform:translate(var(--x),-38px) scale(.15);opacity:0}}
-.network{margin-top:14px;border:1px solid #28375e;border-radius:17px;padding:13px;background:#080e20}.networkHead{display:flex;justify-content:space-between;align-items:center}.count{font-size:22px;font-weight:900}.spots{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px;min-height:24px}.spot{display:flex;align-items:center;gap:6px;background:#101a32;border:1px solid #28385e;border-radius:99px;padding:5px 9px;font-size:10px;color:#b8c1d8}.spot i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1s infinite}.empty{color:#66728f;font-size:11px}.log{text-align:center;color:var(--muted);font-size:11px;margin-top:9px;min-height:16px}.note{text-align:center;color:#626e89;font-size:10px;line-height:1.4;margin-top:11px}
-@media(max-width:360px){.app{padding-left:10px;padding-right:10px}.panel{padding-left:13px;padding-right:13px}.hz{font-size:58px}}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b17;color:#eef2ff}
+body{padding:14px}
+.app{max-width:620px;margin:auto}
+.header{padding:16px;border:1px solid #29305a;border-radius:22px;background:#111733;position:relative;overflow:hidden}
+.header:after{content:"";position:absolute;inset:-60%;background:conic-gradient(from 0deg,transparent,#36d7c4,transparent,#8b7cff,transparent);animation:spin 5s linear infinite;opacity:.16}
+.header>*{position:relative;z-index:1}
+h1{font-size:22px;margin:0}.sub{font-size:12px;color:#aeb7d8;margin-top:4px}
+.status{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px}
+.led{width:11px;height:11px;border-radius:50%;background:#777;box-shadow:0 0 0 transparent}
+.led.on{background:#36d7c4;box-shadow:0 0 16px #36d7c4}
+.panel{margin-top:14px;padding:16px;border:1px solid #29305a;border-radius:22px;background:#111733}
+.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}
+button,input{font:inherit}
+button{border:0;border-radius:14px;padding:13px 15px;background:#252d59;color:white;font-weight:700}
+button.primary{background:#36d7c4;color:#061014}
+button.stop{background:#ff6685;color:#21050d}
+button:disabled{opacity:.45}
+input[type=text]{width:100%;padding:13px;border-radius:14px;border:1px solid #343d6b;background:#0b1024;color:white;outline:none}
+input[type=range]{width:100%;accent-color:#36d7c4}
+.big{font-size:34px;font-weight:800}
+.muted{color:#9da7ca;font-size:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.stat{padding:13px;border:1px solid #29305a;border-radius:16px;background:#0d132b}
+.log{margin-top:12px;min-height:42px;padding:11px;border-radius:14px;background:#090e20;color:#aeb7d8;font-size:12px}
+.light{height:6px;border-radius:99px;margin:12px 0;background:#1d2647;overflow:hidden}
+.light.on{background:#36d7c4;box-shadow:0 0 18px #36d7c4}
+.particles{height:55px;position:relative;overflow:hidden;border-radius:14px;background:#080d1d}
+.p{position:absolute;width:5px;height:5px;border-radius:50%;background:#36d7c4;box-shadow:0 0 12px #36d7c4;animation:fly 1.5s linear forwards}
+.disclaimer{margin-top:12px;font-size:11px;line-height:1.45;color:#8993b8}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fly{from{transform:translate(0,30px) scale(.5);opacity:0}40%{opacity:1}to{transform:translate(600px,-20px) scale(1.4);opacity:0}}
+@media(max-width:430px){body{padding:9px}.panel,.header{padding:13px;border-radius:18px}.grid{grid-template-columns:1fr 1fr}button{padding:12px 10px}}
 </style>
 </head>
 <body>
-<main class="app">
-<header class="top"><div class="brand"><h1>NEURO SYNC V8</h1><p>UNIVERSAL CONNECTION</p></div><div class="status"><i id="led" class="led"></i><span id="status">OFFLINE</span></div></header>
-<section id="panel" class="panel">
-<div class="label">ACTIVE CONNECTION</div>
-<div class="connect"><div><strong id="connectTitle">CONNECT</strong><small id="connectSub">Tap ON to join the relay</small></div><button id="toggle" class="toggle" aria-label="connection"><i></i></button></div>
-<div class="label">FREQUENCY</div><div id="hzText" class="hz">10</div><div class="unit">Hz · shared digital event</div>
-<input id="hz" type="range" min="1" max="20" value="10"><div class="range"><span>1 Hz</span><span>20 Hz</span></div>
-<div class="message"><input id="message" maxlength="500" placeholder="Message to connected devices"><button id="send">SEND</button></div>
-<div class="actions"><button id="trigger">TRIGGER</button><button id="stream">START STREAM</button></div>
-<div class="signal"><div id="signalText">READY</div><div class="bar"><b id="bar"></b></div><div id="particles" class="particles"></div></div>
-<div class="network"><div class="networkHead"><span class="label">ACTIVE DEVICES</span><span id="count" class="count">0</span></div><div id="spots" class="spots"><span class="empty">No connected devices</span></div></div>
-<div id="log" class="log">Offline</div>
-<div class="note">Green spots show connected WebSocket devices that have joined this relay. Light particles are a visual network effect; this app does not detect or transmit thoughts or actual brain signals.</div>
-</section>
-</main>
+<div class="app">
+  <div class="header">
+    <h1>NEURO SYNC V8</h1>
+    <div class="sub">Digital frequency & message network</div>
+    <div class="status"><span id="led" class="led"></span><span id="status">OFFLINE</span></div>
+  </div>
+
+  <div class="panel">
+    <div class="row between">
+      <b>Network connection</b>
+      <button id="connect" class="primary">ON</button>
+    </div>
+    <div id="light" class="light"></div>
+
+    <div class="grid">
+      <div class="stat"><div class="muted">ACTIVE DEVICES</div><div id="online" class="big">0</div></div>
+      <div class="stat"><div class="muted">FREQUENCY</div><div class="big"><span id="hzText">10</span> Hz</div></div>
+    </div>
+
+    <div class="panel" style="padding:12px;margin-top:12px">
+      <div class="row between"><b>1–20 Hz</b><span id="rangeText" class="muted">10 Hz</span></div>
+      <input id="hz" type="range" min="1" max="20" value="10">
+      <div class="row" style="margin-top:10px">
+        <button id="trigger" class="primary" style="flex:1">TRIGGER SIGNAL</button>
+      </div>
+    </div>
+
+    <div style="margin-top:12px">
+      <input id="message" type="text" maxlength="500" placeholder="Type a network message">
+      <div class="row" style="margin-top:10px">
+        <button id="send" class="primary" style="flex:1">SEND</button>
+        <button id="stream" style="flex:1">START STREAM</button>
+      </div>
+    </div>
+
+    <div id="particles" class="particles" style="margin-top:12px"></div>
+    <div id="log" class="log">Ready. Connect to this NEURO V8 server.</div>
+
+    <div class="disclaimer">
+      This app synchronizes digital network events, messages and visual frequency effects.
+      A phone/browser alone cannot detect EEG, thoughts, or establish a biological brain-to-brain connection.
+      Actual BCI/EEG functions require compatible hardware and software.
+    </div>
+  </div>
+</div>
+
 <script>
-const WSS="wss://colbas.univonra.workers.dev/ws";
-const deviceId="v8-"+Math.random().toString(36).slice(2,10);
-let ws=null,timer=null;
-const $=x=>document.querySelector(x), panel=$("#panel"),led=$("#led"),status=$("#status"),toggle=$("#toggle"),connectTitle=$("#connectTitle"),connectSub=$("#connectSub"),hz=$("#hz"),hzText=$("#hzText"),message=$("#message"),send=$("#send"),trigger=$("#trigger"),stream=$("#stream"),signalText=$("#signalText"),bar=$("#bar"),particles=$("#particles"),count=$("#count"),spots=$("#spots"),log=$("#log");
-function ui(on){toggle.classList.toggle("on",on);panel.classList.toggle("active",on);led.classList.toggle("on",on);status.textContent=on?"ONLINE":"OFFLINE";connectTitle.textContent=on?"CONNECTED":"CONNECT";connectSub.textContent=on?"Relay active":"Tap ON to join the relay";send.disabled=trigger.disabled=stream.disabled=!on}
-function dots(n){count.textContent=n;spots.innerHTML="";if(!n){spots.innerHTML='<span class="empty">No connected devices</span>';return}for(let i=0;i<n;i++){let s=document.createElement("span");s.className="spot";s.innerHTML='<i></i>DEVICE '+(i+1);spots.appendChild(s)}}
-function burst(){for(let i=0;i<15;i++){let p=document.createElement("i");p.className="particle";p.style.left=(42+Math.random()*16)+"%";p.style.setProperty("--x",(Math.random()*180-90)+"px");particles.appendChild(p);setTimeout(()=>p.remove(),850)}}
-function signal(text,f){signalText.textContent=text;bar.style.width=Math.max(5,Math.min(100,f/20*100))+"%";burst();setTimeout(()=>signalText.textContent="READY",900)}
-function connect(){if(ws&&ws.readyState===1)return;log.textContent="Connecting to satellite relay…";try{ws=new WebSocket(WSS)}catch{log.textContent="WebSocket unavailable";return}ws.onopen=()=>{ui(true);ws.send(JSON.stringify({type:"presence",deviceId}));log.textContent="Connected — waiting for devices"};ws.onmessage=e=>{try{let p=JSON.parse(e.data);if(p.type==="presence"){dots(Number(p.online)||0)}else if(p.type==="frequency"){hz.value=p.hz;hzText.textContent=p.hz;signal("WAVE EVENT • "+p.hz+" Hz",p.hz);log.textContent="Frequency event received"}else if(p.type==="message"){signal("MESSAGE EVENT",+hz.value);log.textContent="Message received: "+p.text}}catch{}};ws.onerror=()=>log.textContent="Satellite relay error";ws.onclose=()=>{stop();ws=null;dots(0);ui(false);log.textContent="Disconnected"}}
-function disconnect(){stop();if(ws)try{ws.close()}catch{}ws=null;dots(0);ui(false);log.textContent="Disconnected"}
-function freq(){if(!ws||ws.readyState!==1){log.textContent="Connect first";return}let f=+hz.value;ws.send(JSON.stringify({type:"frequency",hz:f,source:"NEURO-SYNC-V8",deviceId}));signal("WAVE SENT • "+f+" Hz",f);log.textContent="Frequency event sent to connected devices"}
-function sendMessage(){let text=message.value.trim();if(!text)return;if(!ws||ws.readyState!==1){log.textContent="Connect first";return}ws.send(JSON.stringify({type:"message",text,deviceId}));signal("MESSAGE SENT",+hz.value);log.textContent="Message sent to connected devices";message.value=""}
-function start(){if(timer)return;timer=setInterval(freq,Math.max(150,1000/+hz.value));stream.classList.add("active");stream.textContent="STOP STREAM";log.textContent="Live event stream active"}
-function stop(){if(timer){clearInterval(timer);timer=null}stream.classList.remove("active");stream.textContent="START STREAM"}
-toggle.onclick=()=>ws&&ws.readyState===1?disconnect():connect();hz.oninput=()=>{hzText.textContent=hz.value;if(timer){stop();start()}};trigger.onclick=freq;send.onclick=sendMessage;stream.onclick=()=>timer?stop():start();message.onkeydown=e=>{if(e.key==="Enter")sendMessage()};ui(false);dots(0);
+const WSS = location.origin.replace(/^http/,"ws") + "/ws";
+const deviceId = "v8-" + Math.random().toString(36).slice(2,10);
+let ws = null, streamTimer = null;
+
+const $ = id => document.getElementById(id);
+const led=$("led"), status=$("status"), connectBtn=$("connect"), online=$("online");
+const hz=$("hz"), hzText=$("hzText"), rangeText=$("rangeText");
+const trigger=$("trigger"), message=$("message"), send=$("send"), stream=$("stream");
+const log=$("log"), light=$("light"), particles=$("particles");
+
+function setUI(on){
+  led.classList.toggle("on",on);
+  light.classList.toggle("on",on);
+  status.textContent=on ? "CONNECTED" : "OFFLINE";
+  connectBtn.textContent=on ? "OFF" : "ON";
+  connectBtn.classList.toggle("stop",on);
+}
+function burst(label){
+  log.textContent=label;
+  for(let i=0;i<18;i++){
+    const p=document.createElement("span"); p.className="p";
+    p.style.left=(Math.random()*20)+"%";
+    p.style.top=(10+Math.random()*75)+"%";
+    p.style.animationDelay=(Math.random()*.35)+"s";
+    particles.appendChild(p);
+    setTimeout(()=>p.remove(),1900);
+  }
+}
+function connect(){
+  if(ws && ws.readyState===WebSocket.OPEN)return;
+  log.textContent="Connecting to NEURO V8 server…";
+  try{ws=new WebSocket(WSS)}catch(e){log.textContent="WebSocket unavailable";return}
+  ws.onopen=()=>{
+    setUI(true);
+    ws.send(JSON.stringify({type:"presence",deviceId}));
+    log.textContent="Connected to NEURO V8";
+  };
+  ws.onmessage=e=>{
+    try{
+      const p=JSON.parse(e.data);
+      if(p.type==="presence"){
+        online.textContent=Number(p.online)||0;
+      }else if(p.type==="frequency"){
+        hz.value=p.hz; hzText.textContent=p.hz; rangeText.textContent=p.hz+" Hz";
+        burst("Frequency event • "+p.hz+" Hz");
+      }else if(p.type==="message"){
+        burst("Message received • "+(p.text||""));
+      }
+    }catch{}
+  };
+  ws.onerror=()=>{log.textContent="NEURO V8 WebSocket error"};
+  ws.onclose=()=>{stopStream();ws=null;online.textContent="0";setUI(false);log.textContent="Disconnected"};
+}
+function disconnect(){
+  stopStream();
+  if(ws){try{ws.close()}catch{}}
+}
+function sendJSON(obj){
+  if(!ws || ws.readyState!==WebSocket.OPEN){log.textContent="Connect first";return false}
+  ws.send(JSON.stringify({...obj,deviceId}));
+  return true;
+}
+function triggerSignal(){
+  const n=Number(hz.value);
+  if(sendJSON({type:"frequency",hz:n}))burst("Signal sent • "+n+" Hz");
+}
+function sendMessage(){
+  const text=message.value.trim(); if(!text)return;
+  if(sendJSON({type:"message",text})){burst("Message sent");message.value=""}
+}
+function startStream(){
+  if(streamTimer || !ws || ws.readyState!==WebSocket.OPEN)return;
+  stream.textContent="STOP STREAM";
+  streamTimer=setInterval(triggerSignal,1000);
+}
+function stopStream(){
+  if(streamTimer){clearInterval(streamTimer);streamTimer=null}
+  stream.textContent="START STREAM";
+}
+connectBtn.onclick=()=>ws&&ws.readyState===WebSocket.OPEN?disconnect():connect();
+hz.oninput=()=>{hzText.textContent=hz.value;rangeText.textContent=hz.value+" Hz"};
+trigger.onclick=triggerSignal;
+send.onclick=sendMessage;
+stream.onclick=()=>streamTimer?stopStream():startStream();
+message.onkeydown=e=>{if(e.key==="Enter")sendMessage()};
 </script>
 </body>
 </html>
