@@ -37,7 +37,7 @@ body{min-height:100vh;display:flex;justify-content:center}.app{width:100%;max-wi
 </section>
 </main>
 <script>
-const WSS="wss://comn-setelite.univonra.workers.dev/ws";
+const WSS="wss://colbas.univonra.workers.dev/ws";
 const deviceId="v8-"+Math.random().toString(36).slice(2,10);
 let ws=null,timer=null;
 const $=x=>document.querySelector(x), panel=$("#panel"),led=$("#led"),status=$("#status"),toggle=$("#toggle"),connectTitle=$("#connectTitle"),connectSub=$("#connectSub"),hz=$("#hz"),hzText=$("#hzText"),message=$("#message"),send=$("#send"),trigger=$("#trigger"),stream=$("#stream"),signalText=$("#signalText"),bar=$("#bar"),particles=$("#particles"),count=$("#count"),spots=$("#spots"),log=$("#log");
