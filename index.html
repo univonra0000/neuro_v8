@@ -1,23 +1,310 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Neuro Sync V7 Satellite Frequency</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><style>
-:root{--bg:#071126;--panel:#0d1a38;--text:#f5f7ff;--muted:#aeb9d8;--green:#20e6a8}*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#050b19,#0c1834);color:var(--text);font:15px system-ui}.wrap{max-width:900px;margin:auto;padding:14px}.card{background:var(--panel);border:1px solid #26375f;border-radius:16px;padding:14px;margin:10px 0}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.grow{flex:1}input,button{min-height:44px;border-radius:12px;border:1px solid #33456e;font:inherit}input{background:#07132e;color:white;padding:10px}button{background:#3550a8;color:white;padding:10px 16px;font-weight:700}.primary{background:#168d76}.light{display:inline-block;width:15px;height:15px;border-radius:50%;background:#fff}.on{background:var(--green);box-shadow:0 0 18px var(--green)}#map{height:390px;border-radius:14px;overflow:hidden}.metric{font-size:28px;font-weight:800}.muted{color:var(--muted);font-size:12px}.particle{position:fixed;width:7px;height:7px;border-radius:50%;background:#9fffe3;pointer-events:none;animation:fly .9s ease-out forwards}@keyframes fly{to{transform:translate(var(--dx),var(--dy)) scale(.1);opacity:0}}
-</style></head><body><div class="wrap"><h2>🛰️ Neuro Sync V7</h2><div class="card"><div class="row"><span id="light" class="light"></span><b id="status">SATELLITE OFFLINE</b><span class="muted" id="server">https://comn-setelite.univonra.workers.dev/</span></div><div class="row" style="margin-top:10px"><button id="connect" class="primary">CONNECT SATELLITE</button><button id="disconnect">DISCONNECT</button></div></div>
-<div class="card"><b>FREQUENCY SENDER</b><div class="row"><div class="grow"><div><span id="freqText">4</span> Hz</div><input id="freq" type="range" min="1" max="20" value="4" style="width:100%"></div><button id="send">SEND TO CONNECTED DEVICES</button></div><div class="muted">This sends a digital frequency/event value over the network. It does not measure or transmit thoughts or brain waves.</div></div>
-<div class="card"><div class="metric" id="online">0</div><div class="muted">ONLINE NETWORK CONNECTIONS</div><div style="margin-top:8px">Last received: <b id="received">—</b></div></div>
-<div class="card"><b>MAP</b><div id="map"></div><div class="muted" style="margin-top:8px">🟢 connected location · ⚪ last-known location after disconnect. Location sharing is optional and requires permission.</div><button id="share" style="margin-top:10px">ENABLE LOCATION SHARING</button></div>
-<div class="card"><b>EVENT LOG</b><pre id="log" style="white-space:pre-wrap;max-height:180px;overflow:auto"></pre></div></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
-const $=id=>document.getElementById(id);let ws=null,watch=null,myPos=null,lastLocation=0;const id=localStorage.nsV7Id||(localStorage.nsV7Id=crypto.randomUUID());
-const map=L.map('map').setView([20.5937,78.9629],5);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);const markers=new Map();
-function log(x){$('log').textContent+=new Date().toLocaleTimeString()+' '+x+'\n'}function particles(){for(let i=0;i<20;i++){let p=document.createElement('i');p.className='particle';p.style.left=innerWidth/2+'px';p.style.top=innerHeight/2+'px';p.style.setProperty('--dx',(Math.random()*260-130)+'px');p.style.setProperty('--dy',(Math.random()*260-130)+'px');document.body.appendChild(p);setTimeout(()=>p.remove(),950)}}
-function marker(m,online){let k=m.deviceId||'unknown';let color=online?'#20e6a8':'#fff';let icon=L.divIcon({className:'',html:`<div style="width:16px;height:16px;border-radius:50%;background:${color};border:2px solid #10213f;box-shadow:0 0 12px ${color}"></div>`,iconSize:[16,16],iconAnchor:[8,8]});let mk=markers.get(k);if(!mk){mk=L.marker([m.lat,m.lon],{icon}).addTo(map);markers.set(k,mk)}else mk.setLatLng([m.lat,m.lon]).setIcon(icon);mk.bindPopup((online?'🟢 Connected':'⚪ Offline')+'<br>'+k)}
-function send(o){if(ws&&ws.readyState===1)ws.send(JSON.stringify(o))}
-$('freq').oninput=()=>{$('freqText').textContent=$('freq').value};
-$('connect').onclick=()=>{let base='https://comn-setelite.univonra.workers.dev/';let url=base.replace(/^http/,'ws').replace(/\/$/,'/ws');log('Connecting '+url);ws=new WebSocket(url);$('status').textContent='CONNECTING';ws.onopen=()=>{$('status').textContent='SATELLITE CONNECTED';$('light').className='light on';send({type:'presence',deviceId:id,optIn:true});sendLocation();log('Connected')};ws.onmessage=e=>{try{let m=JSON.parse(e.data);if(m.type==='presence'){$('online').textContent=m.online??0;(m.participants||[]).forEach(x=>marker(x,true));log('Online: '+m.online)}else if(m.type==='frequency'){$('received').textContent=m.frequency+' Hz';particles();log('Received '+m.frequency+' Hz')}else if(m.type==='location'){marker(m,true)}else if(m.type==='location_remove'){marker(m,false)}}catch{log(e.data)}};ws.onerror=()=>{ $('status').textContent='SATELLITE ERROR';$('light').className='light';log('WebSocket error')};ws.onclose=()=>{$('status').textContent='SATELLITE OFFLINE';$('light').className='light';$('online').textContent='0';log('Disconnected')}};
-$('disconnect').onclick=()=>{if(ws){send({type:'presence',deviceId:id,online:false});ws.close();ws=null}};
-$('send').onclick=()=>{let f=Number($('freq').value);if(!ws||ws.readyState!==1){log('Connect satellite first');return}send({type:'frequency',deviceId:id,frequency:f,time:Date.now()});$('received').textContent=f+' Hz (sent)';particles();log('Sent '+f+' Hz to connected devices')};
-$('share').onclick=()=>{if(!navigator.geolocation){log('Geolocation unavailable');return}if(watch)return;watch=navigator.geolocation.watchPosition(p=>{myPos=p;sendLocation()},e=>log('Location: '+e.message),{enableHighAccuracy:false,maximumAge:15000,timeout:10000});$('share').textContent='LOCATION SHARING ON';sendLocation()};
-function sendLocation(){if(!myPos||!ws||ws.readyState!==1)return;if(Date.now()-lastLocation<10000)return;lastLocation=Date.now();let lat=Math.round(myPos.coords.latitude*1000)/1000,lon=Math.round(myPos.coords.longitude*1000)/1000;send({type:'location',deviceId:id,lat,lon,optIn:true});marker({deviceId:id,lat,lon},true)}
-log('Ready');
-</script></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070b16">
+<title>NEURO SYNC V8 — Satellite Frequency</title>
+<style>
+:root{
+  --bg:#070b16;--panel:#10182b;--panel2:#151f36;--line:#263451;
+  --text:#eef4ff;--muted:#8ea0bd;--green:#36e39a;--cyan:#42d9ff;
+  --purple:#8d7cff;--pink:#ff6b9a;--yellow:#ffd166;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:
+radial-gradient(circle at 50% -10%,#182850 0,#070b16 48%);color:var(--text)}
+body{padding:14px}
+.app{width:min(980px,100%);margin:auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 4px 18px}
+.brand{font-weight:900;letter-spacing:.08em;font-size:20px}
+.sub{color:var(--muted);font-size:11px;margin-top:3px}
+.status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}
+.dot{width:11px;height:11px;border-radius:50%;background:#65718a;box-shadow:0 0 0 4px #65718a18}
+.dot.on{background:var(--green);box-shadow:0 0 12px #36e39a,0 0 0 4px #36e39a20}
+.dot.bad{background:var(--pink)}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+.card{background:linear-gradient(180deg,#121c31,#0e1628);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 12px 35px #0006}
+.card h2{font-size:14px;margin:0 0 12px;letter-spacing:.06em}
+.big{font-size:58px;font-weight:900;line-height:1;text-align:center;margin:10px 0}
+.unit{text-align:center;color:var(--muted);margin-top:-3px}
+input[type=range]{width:100%;accent-color:var(--cyan);height:42px}
+.range-row{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
+button,input[type=text]{width:100%;min-height:48px;border-radius:14px;border:1px solid var(--line);background:#0b1221;color:var(--text);font-size:15px}
+button{cursor:pointer;font-weight:800}
+button.primary{background:linear-gradient(135deg,#8d7cff,#42d9ff);border:0;color:#06101a}
+button.green{background:#102d25;border-color:#246e56;color:#75ffc1}
+button.stop{background:#351522;border-color:#74324b;color:#ff9fbd}
+button:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+label{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}
+input[type=text]{padding:0 12px;margin-bottom:10px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metric{background:#0a1220;border:1px solid var(--line);border-radius:15px;padding:13px}
+.metric b{display:block;font-size:24px;margin-top:4px}
+.metric span{font-size:11px;color:var(--muted)}
+#signalCanvas{display:block;width:100%;height:190px;border-radius:15px;background:#070d19;border:1px solid #1c2a43}
+.log{height:190px;overflow:auto;background:#070d19;border:1px solid #1c2a43;border-radius:15px;padding:10px;font:11px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:#9eb0ca}
+.log .rx{color:#6fffc0}.log .tx{color:#73dfff}.log .err{color:#ff8cae}
+.note{margin-top:14px;padding:12px;border:1px solid #3a345f;border-radius:15px;background:#11102a;color:#bcb5ff;font-size:12px;line-height:1.5}
+footer{text-align:center;color:#667795;font-size:10px;padding:18px 0}
+@media(max-width:700px){body{padding:10px}.grid{grid-template-columns:1fr}.big{font-size:52px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div>
+    <div class="brand">NEURO SYNC V8</div>
+    <div class="sub">SATELLITE FREQUENCY NETWORK</div>
+  </div>
+  <div class="status"><span id="dot" class="dot"></span><span id="statusText">OFFLINE</span></div>
+</header>
+
+<div class="grid">
+<section class="card">
+  <h2>FREQUENCY SENDER</h2>
+  <div id="freqValue" class="big">10</div>
+  <div class="unit">Hz · digital network signal</div>
+  <input id="freq" type="range" min="1" max="20" step="1" value="10" aria-label="Frequency">
+  <div class="range-row"><span>1 Hz</span><span>20 Hz</span></div>
+
+  <div class="actions">
+    <button id="send" class="primary" disabled>SEND TO ALL</button>
+    <button id="start" class="green" disabled>START STREAM</button>
+  </div>
+  <div class="actions">
+    <button id="stop" class="stop" disabled>STOP STREAM</button>
+    <button id="ping" disabled>PING RELAY</button>
+  </div>
+
+  <div style="margin-top:14px">
+    <label for="deviceId">DEVICE ID</label>
+    <input id="deviceId" type="text" maxlength="60">
+  </div>
+</section>
+
+<section class="card">
+  <h2>SATELLITE RELAY</h2>
+  <label>WEBSOCKET ENDPOINT</label>
+  <input type="text" value="wss://comn-setelite.univonra.workers.dev/ws" readonly>
+  <div class="metrics">
+    <div class="metric"><span>ONLINE DEVICES</span><b id="online">0</b></div>
+    <div class="metric"><span>LAST RECEIVED</span><b id="received">—</b></div>
+    <div class="metric"><span>SENT PACKETS</span><b id="sent">0</b></div>
+    <div class="metric"><span>RECEIVED PACKETS</span><b id="recvCount">0</b></div>
+  </div>
+  <div class="note">
+    Relay status: <strong id="relayText">waiting…</strong><br>
+    This sends a digital frequency value over WebSocket. It does not measure,
+    transmit, or read human brain activity. EEG/physiological measurements
+    require compatible hardware.
+  </div>
+</section>
+
+<section class="card">
+  <h2>LIVE SIGNAL</h2>
+  <canvas id="signalCanvas"></canvas>
+</section>
+
+<section class="card">
+  <h2>NETWORK LOG</h2>
+  <div id="log" class="log"></div>
+</section>
+</div>
+
+<footer>NEURO SYNC V8 · Satellite relay network · 1–20 Hz</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const WS_URL = "wss://comn-setelite.univonra.workers.dev/ws";
+  const $ = id => document.getElementById(id);
+
+  const freq = $("freq"), freqValue = $("freqValue");
+  const dot = $("dot"), statusText = $("statusText"), relayText = $("relayText");
+  const online = $("online"), received = $("received"), sent = $("sent"), recvCount = $("recvCount");
+  const logBox = $("log"), canvas = $("signalCanvas"), ctx = canvas.getContext("2d");
+  const sendBtn = $("send"), startBtn = $("start"), stopBtn = $("stop"), pingBtn = $("ping");
+  const deviceInput = $("deviceId");
+
+  let ws = null, streamTimer = null, sentN = 0, recvN = 0, phase = 0;
+  let lastFrequency = 10;
+
+  const savedId = localStorage.getItem("neuroSyncDeviceId");
+  deviceInput.value = savedId || ("V8-" + crypto.randomUUID().slice(0,8).toUpperCase());
+  localStorage.setItem("neuroSyncDeviceId", deviceInput.value);
+
+  function log(msg, cls=""){
+    const d = document.createElement("div");
+    if(cls) d.className = cls;
+    d.textContent = new Date().toLocaleTimeString() + "  " + msg;
+    logBox.prepend(d);
+    while(logBox.children.length > 80) logBox.lastChild.remove();
+  }
+
+  function setConnected(on){
+    dot.className = "dot" + (on ? " on" : " bad");
+    statusText.textContent = on ? "CONNECTED" : "OFFLINE";
+    relayText.textContent = on ? "online" : "disconnected";
+    [sendBtn,startBtn,pingBtn].forEach(b => b.disabled = !on);
+    stopBtn.disabled = !streamTimer;
+  }
+
+  function deviceId(){
+    const v = deviceInput.value.trim().slice(0,60);
+    const id = v || ("V8-" + crypto.randomUUID().slice(0,8).toUpperCase());
+    deviceInput.value = id;
+    localStorage.setItem("neuroSyncDeviceId", id);
+    return id;
+  }
+
+  function sendPacket(packet){
+    if(!ws || ws.readyState !== WebSocket.OPEN) return false;
+    ws.send(JSON.stringify({...packet, deviceId:deviceId()}));
+    return true;
+  }
+
+  function sendFrequency(){
+    const hz = Number(freq.value);
+    if(!sendPacket({type:"frequency", hz, source:"v8-slider"})){
+      log("Not connected", "err"); return;
+    }
+    sentN++;
+    sent.textContent = sentN;
+    log("TX frequency " + hz + " Hz", "tx");
+    flash(hz);
+  }
+
+  function startStream(){
+    if(streamTimer || !ws || ws.readyState !== WebSocket.OPEN) return;
+    const hz = Number(freq.value);
+    const interval = Math.max(50, Math.round(1000 / hz));
+    sendFrequency();
+    streamTimer = setInterval(() => sendFrequency(), interval);
+    startBtn.disabled = true; stopBtn.disabled = false;
+    log("Stream started at " + hz + " Hz", "tx");
+  }
+
+  function stopStream(){
+    if(streamTimer) clearInterval(streamTimer);
+    streamTimer = null;
+    startBtn.disabled = !(ws && ws.readyState === WebSocket.OPEN);
+    stopBtn.disabled = true;
+    log("Stream stopped", "tx");
+  }
+
+  freq.addEventListener("input", () => {
+    freqValue.textContent = freq.value;
+    lastFrequency = Number(freq.value);
+  });
+  deviceInput.addEventListener("change", deviceId);
+  sendBtn.onclick = sendFrequency;
+  startBtn.onclick = startStream;
+  stopBtn.onclick = stopStream;
+  pingBtn.onclick = () => sendPacket({type:"ping"}) && log("PING sent", "tx");
+
+  function connect(){
+    if(ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
+    log("Connecting to satellite relay…");
+    ws = new WebSocket(WS_URL);
+
+    ws.onopen = () => {
+      setConnected(true);
+      log("SERVER CONNECTED", "rx");
+      sendPacket({type:"presence"});
+    };
+
+    ws.onmessage = e => {
+      let p;
+      try { p = JSON.parse(e.data); } catch { return; }
+
+      if(p.type === "presence"){
+        online.textContent = Number(p.online || 0);
+        log("Online devices: " + Number(p.online || 0), "rx");
+      } else if(p.type === "frequency"){
+        recvN++; recvCount.textContent = recvN;
+        const hz = Number(p.hz);
+        received.textContent = Number.isFinite(hz) ? hz + " Hz" : "—";
+        lastFrequency = Number.isFinite(hz) ? hz : lastFrequency;
+        log("RX frequency " + hz + " Hz · " + (p.deviceId || "unknown"), "rx");
+        flash(hz);
+      } else if(p.type === "pong"){
+        log("PONG received", "rx");
+      } else if(p.type === "error"){
+        log("Server error: " + p.message, "err");
+      }
+    };
+
+    ws.onerror = () => {
+      setConnected(false);
+      relayText.textContent = "connection error";
+      log("WebSocket error", "err");
+    };
+
+    ws.onclose = () => {
+      stopStream();
+      setConnected(false);
+      log("Relay disconnected", "err");
+      setTimeout(connect, 2500);
+    };
+  }
+
+  // Visual signal field
+  const particles = [];
+  function resizeCanvas(){
+    const r = canvas.getBoundingClientRect(), d = devicePixelRatio || 1;
+    canvas.width = Math.max(1, Math.floor(r.width*d));
+    canvas.height = Math.max(1, Math.floor(r.height*d));
+    ctx.setTransform(d,0,0,d,0,0);
+  }
+  addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+
+  function flash(hz){
+    const count = Math.min(80, 8 + Math.round(hz*2));
+    for(let i=0;i<count;i++){
+      particles.push({
+        x: canvas.clientWidth/2, y: canvas.clientHeight/2,
+        a: Math.random()*Math.PI*2, r: 2+Math.random()*5,
+        speed: .5+Math.random()*2.2, life: 1
+      });
+    }
+  }
+
+  function draw(){
+    const w=canvas.clientWidth,h=canvas.clientHeight;
+    ctx.fillStyle="rgba(7,13,25,.24)";
+    ctx.fillRect(0,0,w,h);
+    phase += .015 * Math.max(1,lastFrequency);
+
+    ctx.beginPath();
+    for(let x=0;x<w;x+=3){
+      const y=h/2 + Math.sin(x*.035 + phase)*20*Math.sin(phase*.08);
+      if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle="#42d9ff"; ctx.globalAlpha=.5; ctx.stroke(); ctx.globalAlpha=1;
+
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i];
+      p.r += p.speed; p.life -= .018;
+      p.x = w/2 + Math.cos(p.a)*p.r;
+      p.y = h/2 + Math.sin(p.a)*p.r*.55;
+      ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2);
+      ctx.globalAlpha=Math.max(0,p.life);
+      ctx.fillStyle="#8d7cff"; ctx.fill();
+      ctx.globalAlpha=1;
+      if(p.life<=0) particles.splice(i,1);
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  setConnected(false);
+  connect();
+})();
+</script>
+</body>
+</html>
