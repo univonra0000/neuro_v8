@@ -3,7 +3,7 @@ main = "src/index.js"
 compatibility_date = "2026-09-20"
 
 [[durable_objects.bindings]]
-name = "NEURO_SYNC_ROOM"
+name = 'neuro-v8'
 class_name = "NeuroSyncRoom"
 
 [[migrations]]
