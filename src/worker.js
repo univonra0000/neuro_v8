@@ -19,7 +19,7 @@ export default {
   }
 };
 
-export class NeuroRoom extends DurableObject {
+export class NeuroSyncRoom extends DurableObject {
   constructor(ctx, env) {
     super(ctx, env);
     this.recent = new Map();
