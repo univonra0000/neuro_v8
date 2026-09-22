@@ -3,176 +3,134 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080b18">
 <title>NEURO SYNC V8</title>
 <style>
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b17;color:#eef2ff}
-body{padding:14px}
-.app{max-width:620px;margin:auto}
-.header{padding:16px;border:1px solid #29305a;border-radius:22px;background:#111733;position:relative;overflow:hidden}
-.header:after{content:"";position:absolute;inset:-60%;background:conic-gradient(from 0deg,transparent,#36d7c4,transparent,#8b7cff,transparent);animation:spin 5s linear infinite;opacity:.16}
-.header>*{position:relative;z-index:1}
-h1{font-size:22px;margin:0}.sub{font-size:12px;color:#aeb7d8;margin-top:4px}
-.status{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px}
-.led{width:11px;height:11px;border-radius:50%;background:#777;box-shadow:0 0 0 transparent}
-.led.on{background:#36d7c4;box-shadow:0 0 16px #36d7c4}
-.panel{margin-top:14px;padding:16px;border:1px solid #29305a;border-radius:22px;background:#111733}
-.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}
-button,input{font:inherit}
-button{border:0;border-radius:14px;padding:13px 15px;background:#252d59;color:white;font-weight:700}
-button.primary{background:#36d7c4;color:#061014}
-button.stop{background:#ff6685;color:#21050d}
-button:disabled{opacity:.45}
-input[type=text]{width:100%;padding:13px;border-radius:14px;border:1px solid #343d6b;background:#0b1024;color:white;outline:none}
-input[type=range]{width:100%;accent-color:#36d7c4}
-.big{font-size:34px;font-weight:800}
-.muted{color:#9da7ca;font-size:12px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.stat{padding:13px;border:1px solid #29305a;border-radius:16px;background:#0d132b}
-.log{margin-top:12px;min-height:42px;padding:11px;border-radius:14px;background:#090e20;color:#aeb7d8;font-size:12px}
-.light{height:6px;border-radius:99px;margin:12px 0;background:#1d2647;overflow:hidden}
-.light.on{background:#36d7c4;box-shadow:0 0 18px #36d7c4}
-.particles{height:55px;position:relative;overflow:hidden;border-radius:14px;background:#080d1d}
-.p{position:absolute;width:5px;height:5px;border-radius:50%;background:#36d7c4;box-shadow:0 0 12px #36d7c4;animation:fly 1.5s linear forwards}
-.disclaimer{margin-top:12px;font-size:11px;line-height:1.45;color:#8993b8}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fly{from{transform:translate(0,30px) scale(.5);opacity:0}40%{opacity:1}to{transform:translate(600px,-20px) scale(1.4);opacity:0}}
-@media(max-width:430px){body{padding:9px}.panel,.header{padding:13px;border-radius:18px}.grid{grid-template-columns:1fr 1fr}button{padding:12px 10px}}
+:root{--bg:#080b18;--panel:#111733;--panel2:#171d42;--pink:#ff4fa3;--pink2:#ff79bd;--cyan:#36d7c4;--white:#f8f7ff;--muted:#9ea5c8;--line:#3b1740}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 50% -10%,#29102f 0,#080b18 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+header{position:sticky;top:0;z-index:20;background:rgba(8,11,24,.9);backdrop-filter:blur(14px);border-bottom:1px solid #5c1d50;box-shadow:0 0 24px #ff4fa31c}
+.top{max-width:1100px;margin:auto;padding:12px 14px;display:flex;align-items:center;gap:10px}.brand{font-weight:900;letter-spacing:.8px}.sub{font-size:10px;color:var(--muted)}
+.conn{margin-left:auto;display:flex;align-items:center;gap:8px}.led{width:10px;height:10px;border-radius:50%;background:#777;box-shadow:0 0 7px #777}.led.on{background:#40ff9a;box-shadow:0 0 16px #40ff9a}
+button,input{font:inherit}button{border:1px solid #6a245b;color:var(--white);background:#17132b;border-radius:14px;padding:11px 14px;cursor:pointer;box-shadow:0 4px 15px #ff4fa312, inset 0 0 12px #ff4fa30b;transition:.15s}button:hover{box-shadow:0 0 20px #ff4fa344, inset 0 0 15px #ff4fa322}button:active{transform:translateY(2px)}
+.onoff{min-width:86px;border-color:var(--pink);box-shadow:0 0 18px #ff4fa344,inset 0 0 14px #ff4fa318}.onoff.off{border-color:#684a68;color:#aaa;box-shadow:none}
+nav{position:sticky;top:58px;z-index:19;display:flex;gap:8px;overflow:auto;padding:9px 12px;background:#090b18e8;border-bottom:1px solid #30182f}nav button{white-space:nowrap;padding:9px 12px;font-size:13px}
+main{max-width:1100px;margin:auto;padding:14px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{background:linear-gradient(145deg,#151a3b,#0e1229);border:1px solid #632153;border-radius:18px;padding:15px;box-shadow:0 0 25px #ff4fa30d}.wide{grid-column:1/-1}
+h1,h2,h3{margin:0 0 9px}.muted{color:var(--muted);font-size:13px}.big{font-size:30px;font-weight:900}.statusline{display:flex;align-items:center;gap:9px}
+.trigger{width:100%;min-height:105px;font-size:25px;font-weight:900;border:1px solid var(--pink);background:radial-gradient(circle,#431735,#17102b 65%);box-shadow:0 0 22px #ff4fa355,0 0 65px #ff4fa322,inset 0 0 30px #ff4fa322;position:relative;overflow:hidden}.trigger:after{content:"";position:absolute;inset:-50%;background:linear-gradient(115deg,transparent 45%,#fff6 50%,transparent 55%);transform:translateX(-70%) rotate(12deg);animation:sweep 2.2s linear infinite}@keyframes sweep{to{transform:translateX(70%) rotate(12deg)}}.trigger span{position:relative;z-index:1}
+input[type=range]{width:100%;accent-color:var(--pink)}input[type=text]{width:100%;background:#0b0e20;color:white;border:1px solid #632153;border-radius:12px;padding:12px;outline:none}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.pill{display:inline-flex;padding:6px 9px;border:1px solid #64204e;border-radius:99px;color:var(--pink2);font-size:12px}
+.wave{height:90px;position:relative;overflow:hidden;border:1px solid #4b1c45;border-radius:14px;background:#0a0d20}.wave i{position:absolute;bottom:50%;width:3px;background:var(--pink);box-shadow:0 0 12px var(--pink);animation:pulse .6s ease-in-out infinite alternate}@keyframes pulse{to{height:70%;opacity:.3}}
+.log{max-height:220px;overflow:auto;border:1px solid #3f1a3b;border-radius:12px;padding:10px;background:#080b17;font-size:12px}.msg{padding:8px 0;border-bottom:1px solid #29172b}.msg b{color:var(--pink2)}
+.map{height:240px;border-radius:14px;border:1px solid #632153;background:radial-gradient(circle,#15253a 0 2%,transparent 3%) 0 0/24px 24px,#0a1220;position:relative;overflow:hidden}.dot{position:absolute;width:13px;height:13px;border-radius:50%;background:#44ff9a;box-shadow:0 0 16px #44ff9a;transform:translate(-50%,-50%)}.dot.me{background:var(--pink);box-shadow:0 0 18px var(--pink)}.dot.off{background:#d5d5d5;box-shadow:0 0 7px #aaa}
+.note{font-size:11px;color:#9ea5c8;line-height:1.45}
+footer{text-align:center;color:#777b9d;padding:20px;font-size:11px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.top{padding:10px}.brand{font-size:14px}.sub{display:none}nav{top:52px}.card{padding:13px}}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="header">
-    <h1>NEURO SYNC V8</h1>
-    <div class="sub">Digital frequency & message network</div>
-    <div class="status"><span id="led" class="led"></span><span id="status">OFFLINE</span></div>
-  </div>
+<header><div class="top">
+  <div><div class="brand">NEURO SYNC V8</div><div class="sub">DIGITAL SIGNAL • PAST / PRESENT / FUTURE</div></div>
+  <div class="conn"><span class="led" id="led"></span><span id="state">OFFLINE</span><button id="toggle" class="onoff off">OFF</button></div>
+</div></header>
 
-  <div class="panel">
-    <div class="row between">
-      <b>Network connection</b>
-      <button id="connect" class="primary">ON</button>
-    </div>
-    <div id="light" class="light"></div>
+<nav>
+<button onclick="go('dash')">Dashboard</button><button onclick="go('messages')">Messages</button><button onclick="go('signal')">Signal</button><button onclick="go('map')">Map</button><button onclick="go('settings')">Settings</button>
+</nav>
 
-    <div class="grid">
-      <div class="stat"><div class="muted">ACTIVE DEVICES</div><div id="online" class="big">0</div></div>
-      <div class="stat"><div class="muted">FREQUENCY</div><div class="big"><span id="hzText">10</span> Hz</div></div>
-    </div>
+<main>
+<section id="dash" class="grid">
+<div class="card wide"><h2>Connection</h2><div class="statusline"><span class="led" id="led2"></span><span id="connectionText">Tap ON to connect</span><span class="pill">same Worker /ws</span></div><p class="muted">Only devices that open the app and connect voluntarily are counted.</p></div>
+<div class="card"><h3>Connected devices</h3><div class="big" id="count">0</div><div class="muted">live WebSocket connections</div></div>
+<div class="card"><h3>Last response</h3><div id="last">Waiting…</div></div>
+<div class="card wide"><h3>Voice / Mic</h3><div class="row"><button id="mic">🎙️ Mic OFF</button><button id="speak">🔊 Speak response</button></div><p class="note">Voice recognition uses the browser microphone permission. The app waits for a completed voice result before sending a response event.</p></div>
+</section>
 
-    <div class="panel" style="padding:12px;margin-top:12px">
-      <div class="row between"><b>1–20 Hz</b><span id="rangeText" class="muted">10 Hz</span></div>
-      <input id="hz" type="range" min="1" max="20" value="10">
-      <div class="row" style="margin-top:10px">
-        <button id="trigger" class="primary" style="flex:1">TRIGGER SIGNAL</button>
-      </div>
-    </div>
+<section id="messages" class="grid">
+<div class="card wide"><h2>Message</h2><div class="row"><input id="text" type="text" placeholder="Type a message"><button id="send">SEND</button></div></div>
+<div class="card wide"><h3>Received / Sent</h3><div class="log" id="log"></div></div>
+</section>
 
-    <div style="margin-top:12px">
-      <input id="message" type="text" maxlength="500" placeholder="Type a network message">
-      <div class="row" style="margin-top:10px">
-        <button id="send" class="primary" style="flex:1">SEND</button>
-        <button id="stream" style="flex:1">START STREAM</button>
-      </div>
-    </div>
+<section id="signal" class="grid">
+<div class="card"><h2>Frequency</h2><div class="big"><span id="hz">10</span> Hz</div><input id="freq" type="range" min="1" max="20" value="10"><p class="note">Digital event rate only. This does not measure or transmit actual EEG/brain thoughts.</p></div>
+<div class="card"><h2>Trigger</h2><button class="trigger" id="trigger"><span>⚡ TRIGGER SIGNAL</span></button><div class="row" style="margin-top:10px"><button id="auto">AUTO WAVE: OFF</button><button id="beep">BEEP TEST</button></div></div>
+<div class="card wide"><h3>Signal wave</h3><div class="wave" id="wave"></div></div>
+</section>
 
-    <div id="particles" class="particles" style="margin-top:12px"></div>
-    <div id="log" class="log">Ready. Connect to this NEURO V8 server.</div>
+<section id="map" class="grid">
+<div class="card wide"><h2>Participant map</h2><div class="map" id="mapbox"></div><p class="note">Location is displayed only after the participant explicitly enables location sharing. No hidden location tracking.</p><button id="loc">📍 Enable my location</button></div>
+</section>
 
-    <div class="disclaimer">
-      This app synchronizes digital network events, messages and visual frequency effects.
-      A phone/browser alone cannot detect EEG, thoughts, or establish a biological brain-to-brain connection.
-      Actual BCI/EEG functions require compatible hardware and software.
-    </div>
-  </div>
-</div>
+<section id="settings" class="grid">
+<div class="card wide"><h2>Settings / Safety</h2><p class="note">This build uses the NEURO V8 Worker directly: <b>neuro-v8.univonra.workers.dev</b>. It does not require the old satellite relay Worker. Internet/mobile WebSocket transport carries digital messages and events. Actual brain-signal detection requires compatible EEG/BCI hardware.</p></div>
+</section>
+</main>
+<footer>NEURO SYNC V8 • Digital network synchronization</footer>
 
 <script>
-const WSS = location.origin.replace(/^http/,"ws") + "/ws";
-const deviceId = "v8-" + Math.random().toString(36).slice(2,10);
-let ws = null, streamTimer = null;
+let ws=null, wanted=false, retry=null, deviceId="v8-"+Math.random().toString(36).slice(2,10);
+let micOn=false, recognition=null, locationOptIn=false, autoTimer=null;
 
-const $ = id => document.getElementById(id);
-const led=$("led"), status=$("status"), connectBtn=$("connect"), online=$("online");
-const hz=$("hz"), hzText=$("hzText"), rangeText=$("rangeText");
-const trigger=$("trigger"), message=$("message"), send=$("send"), stream=$("stream");
-const log=$("log"), light=$("light"), particles=$("particles");
-
-function setUI(on){
-  led.classList.toggle("on",on);
-  light.classList.toggle("on",on);
-  status.textContent=on ? "CONNECTED" : "OFFLINE";
-  connectBtn.textContent=on ? "OFF" : "ON";
-  connectBtn.classList.toggle("stop",on);
-}
-function burst(label){
-  log.textContent=label;
-  for(let i=0;i<18;i++){
-    const p=document.createElement("span"); p.className="p";
-    p.style.left=(Math.random()*20)+"%";
-    p.style.top=(10+Math.random()*75)+"%";
-    p.style.animationDelay=(Math.random()*.35)+"s";
-    particles.appendChild(p);
-    setTimeout(()=>p.remove(),1900);
-  }
-}
+const $=id=>document.getElementById(id);
+function go(id){document.getElementById(id).scrollIntoView({behavior:"smooth",block:"start"})}
+function ui(on,text){$("led").classList.toggle("on",on);$("led2").classList.toggle("on",on);$("state").textContent=on?"CONNECTED":"OFFLINE";$("toggle").textContent=on?"ON":"OFF";$("toggle").classList.toggle("off",!on);$("connectionText").textContent=text}
+function log(text,from="SYSTEM"){const d=document.createElement("div");d.className="msg";d.innerHTML="<b>"+escapeHtml(from)+"</b> — "+escapeHtml(text);$("log").prepend(d)}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function send(o){if(ws && ws.readyState===1)ws.send(JSON.stringify({...o,deviceId}));else log("Not connected","SYSTEM")}
 function connect(){
-  if(ws && ws.readyState===WebSocket.OPEN)return;
-  log.textContent="Connecting to NEURO V8 server…";
-  try{ws=new WebSocket(WSS)}catch(e){log.textContent="WebSocket unavailable";return}
-  ws.onopen=()=>{
-    setUI(true);
-    ws.send(JSON.stringify({type:"presence",deviceId}));
-    log.textContent="Connected to NEURO V8";
+  wanted=true;if(ws&&ws.readyState<=1)return;
+  clearTimeout(retry);
+  const url=(location.origin||"https://neuro-v8.univonra.workers.dev").replace(/^http/,"ws")+"/ws";
+  try{ws=new WebSocket(url)}catch(e){schedule();return}
+  ws.onopen=()=>{ui(true,"Live connection active");log("Connected to NEURO V8","SYSTEM");send({type:"presence"});if(locationOptIn)sendLocation()}
+  ws.onmessage=e=>{let p;try{p=JSON.parse(e.data)}catch{return}
+    if(p.type==="presence"){$("count").textContent=p.online??0;drawMap(p.participants||[]);$("last").textContent="Presence updated • "+(p.online??0)+" connected"}
+    if(p.type==="frequency"){wave();beep();$("last").textContent=p.hz+" Hz response received";log(p.hz+" Hz signal received",p.deviceId||"DEVICE")}
+    if(p.type==="message"){beep();$("last").textContent="Message received";log(p.text,p.deviceId||"DEVICE")}
   };
-  ws.onmessage=e=>{
-    try{
-      const p=JSON.parse(e.data);
-      if(p.type==="presence"){
-        online.textContent=Number(p.online)||0;
-      }else if(p.type==="frequency"){
-        hz.value=p.hz; hzText.textContent=p.hz; rangeText.textContent=p.hz+" Hz";
-        burst("Frequency event • "+p.hz+" Hz");
-      }else if(p.type==="message"){
-        burst("Message received • "+(p.text||""));
-      }
-    }catch{}
-  };
-  ws.onerror=()=>{log.textContent="NEURO V8 WebSocket error"};
-  ws.onclose=()=>{stopStream();ws=null;online.textContent="0";setUI(false);log.textContent="Disconnected"};
+  ws.onclose=()=>{ui(false,"Disconnected — reconnecting");log("Connection closed","SYSTEM");if(wanted)schedule()}
+  ws.onerror=()=>{ui(false,"Connection error — retrying")}
 }
-function disconnect(){
-  stopStream();
-  if(ws){try{ws.close()}catch{}}
+function schedule(){clearTimeout(retry);if(wanted)retry=setTimeout(connect,2500)}
+function disconnect(){wanted=false;clearTimeout(retry);if(ws){try{ws.close()}catch{}}ws=null;ui(false,"Connection OFF")}
+$("toggle").onclick=()=>{if(wanted)disconnect();else connect()};
+
+$("freq").oninput=e=>$("hz").textContent=e.target.value;
+$("trigger").onclick=()=>{if(!wanted)connect();setTimeout(()=>{let hz=+$("freq").value;send({type:"frequency",hz});wave();beep();$("last").textContent=hz+" Hz sent";log(hz+" Hz signal sent","ME")},150)}
+$("send").onclick=sendMsg;
+$("text").onkeydown=e=>{if(e.key==="Enter")sendMsg()};
+function sendMsg(){let t=$("text").value.trim();if(!t)return;if(!wanted)connect();setTimeout(()=>{send({type:"message",text:t});log(t,"ME");$("text").value="";$("last").textContent="Message sent"},150)}
+
+function wave(){let w=$("wave");w.innerHTML="";for(let i=0;i<34;i++){let x=document.createElement("i");x.style.left=(i*3+1)+"%";x.style.height=(15+Math.random()*65)+"%";x.style.animationDelay=(Math.random()*.3)+"s";w.appendChild(x)}setTimeout(()=>w.innerHTML="",1100)}
+function beep(){try{let A=window.AudioContext||window.webkitAudioContext;if(!A)return;let c=new A();[660,880].forEach((f,i)=>{let o=c.createOscillator(),g=c.createGain();o.frequency.value=f;g.gain.value=.045;o.connect(g);g.connect(c.destination);let t=c.currentTime+i*.12;o.start(t);o.stop(t+.08)})}catch{}}
+$("beep").onclick=beep;
+$("auto").onclick=()=>{if(autoTimer){clearInterval(autoTimer);autoTimer=null;$("auto").textContent="AUTO WAVE: OFF";return}autoTimer=setInterval(()=>{wave();beep()},1000);$("auto").textContent="AUTO WAVE: ON"};
+
+$("mic").onclick=()=>{
+  if(!("webkitSpeechRecognition" in window||"SpeechRecognition" in window)){log("Speech recognition is not supported by this browser","MIC");return}
+  if(micOn){recognition?.stop();micOn=false;$("mic").textContent="🎙️ Mic OFF";return}
+  const R=window.SpeechRecognition||window.webkitSpeechRecognition;recognition=new R();recognition.lang="en-IN";recognition.continuous=false;recognition.interimResults=false;
+  recognition.onstart=()=>{micOn=true;$("mic").textContent="🎙️ Mic ON"}
+  recognition.onresult=e=>{let t=e.results[0][0].transcript.trim();if(t){$("text").value=t;sendMsg();$("last").textContent="Voice response completed";}}
+  recognition.onerror=()=>{micOn=false;$("mic").textContent="🎙️ Mic OFF"}
+  recognition.onend=()=>{micOn=false;$("mic").textContent="🎙️ Mic OFF"}
+  recognition.start();
+};
+$("speak").onclick=()=>{let t=$("last").textContent||"Response complete";if("speechSynthesis"in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang="en-IN";speechSynthesis.speak(u)}};
+
+$("loc").onclick=()=>{
+  if(!navigator.geolocation){log("Location is not available","MAP");return}
+  navigator.geolocation.getCurrentPosition(pos=>{locationOptIn=true;sendLocation();$("loc").textContent="📍 Location sharing ON";drawMe(pos.coords.latitude,pos.coords.longitude)},()=>log("Location permission not granted","MAP"),{enableHighAccuracy:false,timeout:10000})
+};
+function sendLocation(){
+  if(!locationOptIn||!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(p=>send({type:"location",optIn:true,lat:p.coords.latitude,lon:p.coords.longitude}),()=>{});
 }
-function sendJSON(obj){
-  if(!ws || ws.readyState!==WebSocket.OPEN){log.textContent="Connect first";return false}
-  ws.send(JSON.stringify({...obj,deviceId}));
-  return true;
+function drawMe(lat,lon){let b=$("mapbox");let d=document.querySelector(".dot.me");if(!d){d=document.createElement("div");d.className="dot me";b.appendChild(d)}d.style.left=((lon+180)/360*100)+"%";d.style.top=((90-lat)/180*100)+"%"}
+function drawMap(parts){
+  let b=$("mapbox");b.querySelectorAll(".remote-dot").forEach(x=>x.remove());
+  (parts||[]).forEach(p=>{if(!p.locationOptIn||p.lat==null||p.lon==null)return;let d=document.createElement("div");d.className="dot remote-dot";d.title=p.deviceId;d.style.left=((p.lon+180)/360*100)+"%";d.style.top=((90-p.lat)/180*100)+"%";b.appendChild(d)})
 }
-function triggerSignal(){
-  const n=Number(hz.value);
-  if(sendJSON({type:"frequency",hz:n}))burst("Signal sent • "+n+" Hz");
-}
-function sendMessage(){
-  const text=message.value.trim(); if(!text)return;
-  if(sendJSON({type:"message",text})){burst("Message sent");message.value=""}
-}
-function startStream(){
-  if(streamTimer || !ws || ws.readyState!==WebSocket.OPEN)return;
-  stream.textContent="STOP STREAM";
-  streamTimer=setInterval(triggerSignal,1000);
-}
-function stopStream(){
-  if(streamTimer){clearInterval(streamTimer);streamTimer=null}
-  stream.textContent="START STREAM";
-}
-connectBtn.onclick=()=>ws&&ws.readyState===WebSocket.OPEN?disconnect():connect();
-hz.oninput=()=>{hzText.textContent=hz.value;rangeText.textContent=hz.value+" Hz"};
-trigger.onclick=triggerSignal;
-send.onclick=sendMessage;
-stream.onclick=()=>streamTimer?stopStream():startStream();
-message.onkeydown=e=>{if(e.key==="Enter")sendMessage()};
+connect();
 </script>
 </body>
 </html>
