@@ -4,307 +4,74 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#070b16">
-<title>NEURO SYNC V8 — Satellite Frequency</title>
+<title>NEURO SYNC V8</title>
 <style>
-:root{
-  --bg:#070b16;--panel:#10182b;--panel2:#151f36;--line:#263451;
-  --text:#eef4ff;--muted:#8ea0bd;--green:#36e39a;--cyan:#42d9ff;
-  --purple:#8d7cff;--pink:#ff6b9a;--yellow:#ffd166;
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:
-radial-gradient(circle at 50% -10%,#182850 0,#070b16 48%);color:var(--text)}
-body{padding:14px}
-.app{width:min(980px,100%);margin:auto}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 4px 18px}
-.brand{font-weight:900;letter-spacing:.08em;font-size:20px}
-.sub{color:var(--muted);font-size:11px;margin-top:3px}
-.status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}
-.dot{width:11px;height:11px;border-radius:50%;background:#65718a;box-shadow:0 0 0 4px #65718a18}
-.dot.on{background:var(--green);box-shadow:0 0 12px #36e39a,0 0 0 4px #36e39a20}
-.dot.bad{background:var(--pink)}
-.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
-.card{background:linear-gradient(180deg,#121c31,#0e1628);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 12px 35px #0006}
-.card h2{font-size:14px;margin:0 0 12px;letter-spacing:.06em}
-.big{font-size:58px;font-weight:900;line-height:1;text-align:center;margin:10px 0}
-.unit{text-align:center;color:var(--muted);margin-top:-3px}
-input[type=range]{width:100%;accent-color:var(--cyan);height:42px}
-.range-row{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
-button,input[type=text]{width:100%;min-height:48px;border-radius:14px;border:1px solid var(--line);background:#0b1221;color:var(--text);font-size:15px}
-button{cursor:pointer;font-weight:800}
-button.primary{background:linear-gradient(135deg,#8d7cff,#42d9ff);border:0;color:#06101a}
-button.green{background:#102d25;border-color:#246e56;color:#75ffc1}
-button.stop{background:#351522;border-color:#74324b;color:#ff9fbd}
-button:disabled{opacity:.45;cursor:not-allowed}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-label{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}
-input[type=text]{padding:0 12px;margin-bottom:10px}
-.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.metric{background:#0a1220;border:1px solid var(--line);border-radius:15px;padding:13px}
-.metric b{display:block;font-size:24px;margin-top:4px}
-.metric span{font-size:11px;color:var(--muted)}
-#signalCanvas{display:block;width:100%;height:190px;border-radius:15px;background:#070d19;border:1px solid #1c2a43}
-.log{height:190px;overflow:auto;background:#070d19;border:1px solid #1c2a43;border-radius:15px;padding:10px;font:11px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:#9eb0ca}
-.log .rx{color:#6fffc0}.log .tx{color:#73dfff}.log .err{color:#ff8cae}
-.note{margin-top:14px;padding:12px;border:1px solid #3a345f;border-radius:15px;background:#11102a;color:#bcb5ff;font-size:12px;line-height:1.5}
-footer{text-align:center;color:#667795;font-size:10px;padding:18px 0}
-@media(max-width:700px){body{padding:10px}.grid{grid-template-columns:1fr}.big{font-size:52px}}
+:root{--bg:#070b16;--p:#10182b;--p2:#151f36;--l:#263451;--t:#eef4ff;--m:#8ea0bd;--g:#36e39a;--c:#42d9ff;--v:#8d7cff;--r:#ff6b9a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#1b2a50,#070b16 50%);color:var(--t);font:14px system-ui,sans-serif}button,input{font:inherit}.app{max-width:1050px;margin:auto;padding:12px}.top{display:flex;justify-content:space-between;align-items:center;padding:10px 2px 16px}.logo{font-size:21px;font-weight:900;letter-spacing:.08em}.sub{font-size:10px;color:var(--m);letter-spacing:.12em}.state{display:flex;gap:8px;align-items:center;color:var(--m);font-size:11px}.led{width:11px;height:11px;border-radius:50%;background:#647087}.led.on{background:var(--g);box-shadow:0 0 14px var(--g)}.layout{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}.card{background:linear-gradient(180deg,var(--p),#0d1526);border:1px solid var(--l);border-radius:20px;padding:16px;box-shadow:0 12px 35px #0006}.title{font-weight:800;font-size:12px;letter-spacing:.08em;margin-bottom:13px}.hz{text-align:center;font-size:64px;font-weight:900;line-height:1}.unit{text-align:center;color:var(--m);font-size:11px;margin:3px 0 12px}input[type=range]{width:100%;accent-color:var(--c)}.range{display:flex;justify-content:space-between;color:var(--m);font-size:10px}.btns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}button{min-height:48px;border:1px solid var(--l);border-radius:14px;background:#0a1220;color:var(--t);font-weight:800}button.primary{border:0;background:linear-gradient(135deg,var(--v),var(--c));color:#06101a}button.green{color:#78ffc3;border-color:#286d57;background:#102b25}button.red{color:#ff9fbd;border-color:#6d3049;background:#321622}button:disabled{opacity:.4}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric{background:#0a1220;border:1px solid var(--l);border-radius:14px;padding:12px}.metric small{color:var(--m);font-size:9px}.metric b{display:block;font-size:22px;margin-top:4px}.endpoint{width:100%;background:#090f1c;color:#a9b9d1;border:1px solid var(--l);border-radius:12px;padding:12px;margin-bottom:12px;font-size:11px}.log{height:170px;overflow:auto;background:#070d19;border:1px solid #1c2a43;border-radius:14px;padding:10px;font:11px/1.55 monospace}.tx{color:#6edfff}.rx{color:#72ffc1}.err{color:#ff8cae}.note{color:#aaa8df;background:#11102a;border:1px solid #3a345f;border-radius:14px;padding:11px;margin-top:12px;font-size:11px;line-height:1.5}canvas{width:100%;height:210px;background:#070d19;border:1px solid #1c2a43;border-radius:14px;display:block}.footer{text-align:center;color:#61708a;font-size:9px;padding:18px}@media(max-width:720px){.layout{grid-template-columns:1fr}.hz{font-size:55px}}
 </style>
 </head>
 <body>
 <div class="app">
-<header>
-  <div>
-    <div class="brand">NEURO SYNC V8</div>
-    <div class="sub">SATELLITE FREQUENCY NETWORK</div>
-  </div>
-  <div class="status"><span id="dot" class="dot"></span><span id="statusText">OFFLINE</span></div>
-</header>
+<header class="top"><div><div class="logo">NEURO SYNC V8</div><div class="sub">SATELLITE FREQUENCY SOFTWARE</div></div><div class="state"><i id="led" class="led"></i><span id="state">OFFLINE</span></div></header>
 
-<div class="grid">
+<main class="layout">
 <section class="card">
-  <h2>FREQUENCY SENDER</h2>
-  <div id="freqValue" class="big">10</div>
-  <div class="unit">Hz · digital network signal</div>
-  <input id="freq" type="range" min="1" max="20" step="1" value="10" aria-label="Frequency">
-  <div class="range-row"><span>1 Hz</span><span>20 Hz</span></div>
-
-  <div class="actions">
-    <button id="send" class="primary" disabled>SEND TO ALL</button>
-    <button id="start" class="green" disabled>START STREAM</button>
-  </div>
-  <div class="actions">
-    <button id="stop" class="stop" disabled>STOP STREAM</button>
-    <button id="ping" disabled>PING RELAY</button>
-  </div>
-
-  <div style="margin-top:14px">
-    <label for="deviceId">DEVICE ID</label>
-    <input id="deviceId" type="text" maxlength="60">
-  </div>
+<div class="title">FREQUENCY CONTROL</div>
+<div id="hz" class="hz">10</div><div class="unit">Hz · network signal</div>
+<input id="slider" type="range" min="1" max="20" value="10">
+<div class="range"><span>1 Hz</span><span>20 Hz</span></div>
+<div class="btns"><button id="send" class="primary" disabled>SEND TO ALL</button><button id="start" class="green" disabled>START</button></div>
+<div class="btns"><button id="stop" class="red" disabled>STOP</button><button id="ping" disabled>PING</button></div>
 </section>
 
 <section class="card">
-  <h2>SATELLITE RELAY</h2>
-  <label>WEBSOCKET ENDPOINT</label>
-  <input type="text" value="wss://comn-setelite.univonra.workers.dev/ws" readonly>
-  <div class="metrics">
-    <div class="metric"><span>ONLINE DEVICES</span><b id="online">0</b></div>
-    <div class="metric"><span>LAST RECEIVED</span><b id="received">—</b></div>
-    <div class="metric"><span>SENT PACKETS</span><b id="sent">0</b></div>
-    <div class="metric"><span>RECEIVED PACKETS</span><b id="recvCount">0</b></div>
-  </div>
-  <div class="note">
-    Relay status: <strong id="relayText">waiting…</strong><br>
-    This sends a digital frequency value over WebSocket. It does not measure,
-    transmit, or read human brain activity. EEG/physiological measurements
-    require compatible hardware.
-  </div>
-</section>
-
-<section class="card">
-  <h2>LIVE SIGNAL</h2>
-  <canvas id="signalCanvas"></canvas>
-</section>
-
-<section class="card">
-  <h2>NETWORK LOG</h2>
-  <div id="log" class="log"></div>
-</section>
+<div class="title">SATELLITE NETWORK</div>
+<input class="endpoint" readonly value="wss://comn-setelite.univonra.workers.dev/ws">
+<div class="metrics">
+<div class="metric"><small>ONLINE</small><b id="online">0</b></div>
+<div class="metric"><small>RECEIVED</small><b id="last">—</b></div>
+<div class="metric"><small>SENT</small><b id="sent">0</b></div>
+<div class="metric"><small>RX PACKETS</small><b id="rx">0</b></div>
 </div>
+<div class="note">Digital frequency values are sent through the WebSocket relay. This software does not detect or transmit actual brain waves. EEG/physiological measurements require compatible hardware.</div>
+</section>
 
-<footer>NEURO SYNC V8 · Satellite relay network · 1–20 Hz</footer>
+<section class="card"><div class="title">LIVE SIGNAL</div><canvas id="canvas"></canvas></section>
+<section class="card"><div class="title">EVENT LOG</div><div id="log" class="log"></div></section>
+</main>
+<div class="footer">NEURO SYNC V8 · 1–20 Hz · automatic reconnect</div>
 </div>
 
 <script>
-(() => {
-  "use strict";
+const WS="wss://comn-setelite.univonra.workers.dev/ws";
+const $=x=>document.getElementById(x);
+const slider=$("slider"), hz=$("hz"), led=$("led"), state=$("state");
+let ws=null,timer=null,sent=0,rx=0,phase=0,last=10,particles=[];
+const id=localStorage.neuroSyncId||("V8-"+crypto.randomUUID().slice(0,8).toUpperCase());localStorage.neuroSyncId=id;
+function log(s,c=""){let d=document.createElement("div");d.className=c;d.textContent=new Date().toLocaleTimeString()+"  "+s;$("log").prepend(d)}
+function connected(v){led.className="led"+(v?" on":"");state.textContent=v?"CONNECTED":"OFFLINE";$("send").disabled=!v;$("start").disabled=!v;$("ping").disabled=!v}
+function packet(p){if(ws?.readyState!==1)return false;ws.send(JSON.stringify({...p,deviceId:id}));return true}
+function send(){let f=+slider.value;if(!packet({type:"frequency",hz:f,source:"v8"}))return;sent++;$("sent").textContent=sent;log("TX "+f+" Hz","tx");burst(f)}
+function start(){if(timer)return;send();timer=setInterval(send,Math.max(50,1000/+slider.value));$("start").disabled=true;$("stop").disabled=false;log("Stream started","tx")}
+function stop(){clearInterval(timer);timer=null;$("stop").disabled=true;$("start").disabled=!(ws?.readyState===1);log("Stream stopped","tx")}
+slider.oninput=()=>{hz.textContent=slider.value;last=+slider.value}
+$("send").onclick=send;$("start").onclick=start;$("stop").onclick=stop;$("ping").onclick=()=>packet({type:"ping"})&&log("PING","tx");
 
-  const WS_URL = "wss://comn-setelite.univonra.workers.dev/ws";
-  const $ = id => document.getElementById(id);
-
-  const freq = $("freq"), freqValue = $("freqValue");
-  const dot = $("dot"), statusText = $("statusText"), relayText = $("relayText");
-  const online = $("online"), received = $("received"), sent = $("sent"), recvCount = $("recvCount");
-  const logBox = $("log"), canvas = $("signalCanvas"), ctx = canvas.getContext("2d");
-  const sendBtn = $("send"), startBtn = $("start"), stopBtn = $("stop"), pingBtn = $("ping");
-  const deviceInput = $("deviceId");
-
-  let ws = null, streamTimer = null, sentN = 0, recvN = 0, phase = 0;
-  let lastFrequency = 10;
-
-  const savedId = localStorage.getItem("neuroSyncDeviceId");
-  deviceInput.value = savedId || ("V8-" + crypto.randomUUID().slice(0,8).toUpperCase());
-  localStorage.setItem("neuroSyncDeviceId", deviceInput.value);
-
-  function log(msg, cls=""){
-    const d = document.createElement("div");
-    if(cls) d.className = cls;
-    d.textContent = new Date().toLocaleTimeString() + "  " + msg;
-    logBox.prepend(d);
-    while(logBox.children.length > 80) logBox.lastChild.remove();
-  }
-
-  function setConnected(on){
-    dot.className = "dot" + (on ? " on" : " bad");
-    statusText.textContent = on ? "CONNECTED" : "OFFLINE";
-    relayText.textContent = on ? "online" : "disconnected";
-    [sendBtn,startBtn,pingBtn].forEach(b => b.disabled = !on);
-    stopBtn.disabled = !streamTimer;
-  }
-
-  function deviceId(){
-    const v = deviceInput.value.trim().slice(0,60);
-    const id = v || ("V8-" + crypto.randomUUID().slice(0,8).toUpperCase());
-    deviceInput.value = id;
-    localStorage.setItem("neuroSyncDeviceId", id);
-    return id;
-  }
-
-  function sendPacket(packet){
-    if(!ws || ws.readyState !== WebSocket.OPEN) return false;
-    ws.send(JSON.stringify({...packet, deviceId:deviceId()}));
-    return true;
-  }
-
-  function sendFrequency(){
-    const hz = Number(freq.value);
-    if(!sendPacket({type:"frequency", hz, source:"v8-slider"})){
-      log("Not connected", "err"); return;
-    }
-    sentN++;
-    sent.textContent = sentN;
-    log("TX frequency " + hz + " Hz", "tx");
-    flash(hz);
-  }
-
-  function startStream(){
-    if(streamTimer || !ws || ws.readyState !== WebSocket.OPEN) return;
-    const hz = Number(freq.value);
-    const interval = Math.max(50, Math.round(1000 / hz));
-    sendFrequency();
-    streamTimer = setInterval(() => sendFrequency(), interval);
-    startBtn.disabled = true; stopBtn.disabled = false;
-    log("Stream started at " + hz + " Hz", "tx");
-  }
-
-  function stopStream(){
-    if(streamTimer) clearInterval(streamTimer);
-    streamTimer = null;
-    startBtn.disabled = !(ws && ws.readyState === WebSocket.OPEN);
-    stopBtn.disabled = true;
-    log("Stream stopped", "tx");
-  }
-
-  freq.addEventListener("input", () => {
-    freqValue.textContent = freq.value;
-    lastFrequency = Number(freq.value);
-  });
-  deviceInput.addEventListener("change", deviceId);
-  sendBtn.onclick = sendFrequency;
-  startBtn.onclick = startStream;
-  stopBtn.onclick = stopStream;
-  pingBtn.onclick = () => sendPacket({type:"ping"}) && log("PING sent", "tx");
-
-  function connect(){
-    if(ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
-    log("Connecting to satellite relay…");
-    ws = new WebSocket(WS_URL);
-
-    ws.onopen = () => {
-      setConnected(true);
-      log("SERVER CONNECTED", "rx");
-      sendPacket({type:"presence"});
-    };
-
-    ws.onmessage = e => {
-      let p;
-      try { p = JSON.parse(e.data); } catch { return; }
-
-      if(p.type === "presence"){
-        online.textContent = Number(p.online || 0);
-        log("Online devices: " + Number(p.online || 0), "rx");
-      } else if(p.type === "frequency"){
-        recvN++; recvCount.textContent = recvN;
-        const hz = Number(p.hz);
-        received.textContent = Number.isFinite(hz) ? hz + " Hz" : "—";
-        lastFrequency = Number.isFinite(hz) ? hz : lastFrequency;
-        log("RX frequency " + hz + " Hz · " + (p.deviceId || "unknown"), "rx");
-        flash(hz);
-      } else if(p.type === "pong"){
-        log("PONG received", "rx");
-      } else if(p.type === "error"){
-        log("Server error: " + p.message, "err");
-      }
-    };
-
-    ws.onerror = () => {
-      setConnected(false);
-      relayText.textContent = "connection error";
-      log("WebSocket error", "err");
-    };
-
-    ws.onclose = () => {
-      stopStream();
-      setConnected(false);
-      log("Relay disconnected", "err");
-      setTimeout(connect, 2500);
-    };
-  }
-
-  // Visual signal field
-  const particles = [];
-  function resizeCanvas(){
-    const r = canvas.getBoundingClientRect(), d = devicePixelRatio || 1;
-    canvas.width = Math.max(1, Math.floor(r.width*d));
-    canvas.height = Math.max(1, Math.floor(r.height*d));
-    ctx.setTransform(d,0,0,d,0,0);
-  }
-  addEventListener("resize", resizeCanvas);
-  resizeCanvas();
-
-  function flash(hz){
-    const count = Math.min(80, 8 + Math.round(hz*2));
-    for(let i=0;i<count;i++){
-      particles.push({
-        x: canvas.clientWidth/2, y: canvas.clientHeight/2,
-        a: Math.random()*Math.PI*2, r: 2+Math.random()*5,
-        speed: .5+Math.random()*2.2, life: 1
-      });
-    }
-  }
-
-  function draw(){
-    const w=canvas.clientWidth,h=canvas.clientHeight;
-    ctx.fillStyle="rgba(7,13,25,.24)";
-    ctx.fillRect(0,0,w,h);
-    phase += .015 * Math.max(1,lastFrequency);
-
-    ctx.beginPath();
-    for(let x=0;x<w;x+=3){
-      const y=h/2 + Math.sin(x*.035 + phase)*20*Math.sin(phase*.08);
-      if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-    }
-    ctx.strokeStyle="#42d9ff"; ctx.globalAlpha=.5; ctx.stroke(); ctx.globalAlpha=1;
-
-    for(let i=particles.length-1;i>=0;i--){
-      const p=particles[i];
-      p.r += p.speed; p.life -= .018;
-      p.x = w/2 + Math.cos(p.a)*p.r;
-      p.y = h/2 + Math.sin(p.a)*p.r*.55;
-      ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2);
-      ctx.globalAlpha=Math.max(0,p.life);
-      ctx.fillStyle="#8d7cff"; ctx.fill();
-      ctx.globalAlpha=1;
-      if(p.life<=0) particles.splice(i,1);
-    }
-    requestAnimationFrame(draw);
-  }
-  draw();
-
-  setConnected(false);
-  connect();
-})();
+function connect(){
+ ws=new WebSocket(WS);
+ ws.onopen=()=>{connected(true);log("SERVER CONNECTED","rx");packet({type:"presence"})};
+ ws.onmessage=e=>{let p;try{p=JSON.parse(e.data)}catch{return}
+  if(p.type==="presence"){$("online").textContent=p.online||0}
+  if(p.type==="frequency"){rx++;$("rx").textContent=rx;$("last").textContent=p.hz+" Hz";last=+p.hz||last;log("RX "+p.hz+" Hz · "+(p.deviceId||"unknown"),"rx");burst(+p.hz)}
+  if(p.type==="pong")log("PONG","rx"); if(p.type==="error")log("ERROR "+p.message,"err")
+ };
+ ws.onerror=()=>{connected(false);log("WebSocket error","err")};
+ ws.onclose=()=>{stop();connected(false);setTimeout(connect,2500)}
+}
+const canvas=$("canvas"),ctx=canvas.getContext("2d");
+function resize(){let r=canvas.getBoundingClientRect(),d=devicePixelRatio||1;canvas.width=r.width*d;canvas.height=r.height*d;ctx.setTransform(d,0,0,d,0,0)}addEventListener("resize",resize);resize();
+function burst(f){for(let i=0;i<Math.min(60,8+f*2);i++)particles.push({a:Math.random()*6.28,r:2,s:.7+Math.random()*2,l:1})}
+function draw(){let w=canvas.clientWidth,h=canvas.clientHeight;ctx.fillStyle="rgba(7,13,25,.24)";ctx.fillRect(0,0,w,h);phase+=.01*last;ctx.beginPath();for(let x=0;x<w;x+=3){let y=h/2+Math.sin(x*.04+phase)*22;if(!x)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.strokeStyle="#42d9ff";ctx.globalAlpha=.5;ctx.stroke();ctx.globalAlpha=1;for(let i=particles.length-1;i>=0;i--){let p=particles[i];p.r+=p.s;p.l-=.018;let x=w/2+Math.cos(p.a)*p.r,y=h/2+Math.sin(p.a)*p.r*.55;ctx.globalAlpha=Math.max(0,p.l);ctx.fillStyle="#8d7cff";ctx.beginPath();ctx.arc(x,y,2.5,0,6.28);ctx.fill();ctx.globalAlpha=1;if(p.l<=0)particles.splice(i,1)}requestAnimationFrame(draw)}draw();connected(false);connect();
 </script>
 </body>
 </html>

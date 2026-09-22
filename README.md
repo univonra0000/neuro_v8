@@ -1,27 +1,14 @@
-# NEURO SYNC V8 — Satellite Frequency
+# NEURO SYNC V8 SOFTWARE
 
-## Fixed endpoint
-WSS: wss://comn-setelite.univonra.workers.dev/ws
+Exact relay:
+wss://comn-setelite.univonra.workers.dev/ws
 
-## Front-end
-Open `index.html` in your web hosting.
+Files:
+- index.html — complete responsive V8 software
+- src/index.js — WebSocket satellite relay
+- wrangler.toml — Cloudflare Durable Object binding
 
-## Worker
-Deploy `src/index.js` to the Cloudflare Worker named `comn-setelite`.
-
-The Worker needs this Durable Object binding:
+Deploy src/index.js to the `comn-setelite` Worker. The Durable Object binding must be:
 SATELLITE_ROOM -> SatelliteFrequencyRoom
 
-`wrangler.toml` is included for Wrangler deployments.
-
-## What it does
-- 1–20 Hz digital network frequency value
-- SEND TO ALL
-- START STREAM / STOP STREAM
-- online device count
-- received frequency
-- live signal animation
-- reconnect on disconnect
-- device ID stored locally
-
-The frequency is a network value/event. It is not an EEG measurement or mind-reading system. Real brain-frequency measurement requires compatible physiological/EEG hardware.
+The app sends 1–20 Hz digital network frequency events. It does not measure or transmit actual EEG/brain activity.
