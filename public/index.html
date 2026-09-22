@@ -3,242 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#070b19">
+<meta name="theme-color" content="#050914">
 <title>NEURO SYNC V8</title>
 <style>
-:root{
-  --bg:#060914;
-  --panel:#0d1428;
-  --panel2:#111a33;
-  --line:#28365e;
-  --text:#f4f7ff;
-  --muted:#8995b4;
-  --cyan:#35e1d0;
-  --blue:#6d8cff;
-  --pink:#ff6388;
-  --green:#45ef9b;
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text)}
-body{display:flex;justify-content:center}
-.app{
-  width:100%;max-width:520px;min-height:100vh;
-  padding:18px 14px 28px;
-  background:
-    radial-gradient(circle at 50% -10%,rgba(93,115,255,.16),transparent 38%),
-    linear-gradient(180deg,#0a1021 0%,#060914 100%);
-}
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.brand h1{font-size:24px;letter-spacing:1px;margin:0;font-weight:900}
-.brand p{margin:4px 0 0;color:var(--muted);font-size:11px;letter-spacing:1.3px}
-.status{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;color:var(--muted)}
-.dot{width:11px;height:11px;border-radius:50%;background:var(--pink);box-shadow:0 0 9px rgba(255,99,136,.65)}
-.dot.on{background:var(--green);box-shadow:0 0 7px var(--green),0 0 18px rgba(69,239,155,.75);animation:blink 1.2s infinite}
-@keyframes blink{50%{opacity:.45}}
-
-.panel{
-  position:relative;border:1px solid var(--line);border-radius:25px;
-  padding:18px 16px 20px;background:rgba(13,20,40,.94);
-  overflow:hidden;
-}
-.panel::before{
-  content:"";position:absolute;inset:-2px;border-radius:27px;padding:1.5px;
-  background:conic-gradient(from 0deg,transparent 0 58%,rgba(53,225,208,.0) 66%,rgba(53,225,208,.9) 73%,rgba(109,140,255,.85) 80%,transparent 89% 100%);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  animation:spin 3.4s linear infinite;pointer-events:none;
-}
-.panel.active::before{
-  background:conic-gradient(from 0deg,transparent 0 30%,rgba(69,239,155,.08) 42%,rgba(53,225,208,1) 52%,rgba(109,140,255,1) 61%,rgba(255,99,136,.9) 68%,transparent 78% 100%);
-  animation:spin .9s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.label{font-size:12px;color:var(--muted);letter-spacing:1.2px;font-weight:800}
-.value{
-  font-size:68px;line-height:1;font-weight:900;text-align:center;
-  margin:20px 0 4px;letter-spacing:-2px;
-  text-shadow:0 0 24px rgba(53,225,208,.15);
-}
-.unit{text-align:center;color:var(--muted);font-size:13px;margin-bottom:18px}
-
-.switchRow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 20px}
-.switchText strong{display:block;font-size:16px}
-.switchText span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
-.switch{
-  width:68px;height:38px;border:1px solid #3b486f;border-radius:99px;background:#171e36;
-  padding:3px;cursor:pointer;position:relative;flex:0 0 auto;
-}
-.switch i{display:block;width:30px;height:30px;border-radius:50%;background:#a4abc0;transition:.22s;box-shadow:0 2px 8px #0008}
-.switch.on{background:rgba(53,225,208,.17);border-color:var(--cyan);box-shadow:0 0 14px rgba(53,225,208,.22)}
-.switch.on i{transform:translateX(30px);background:var(--cyan);box-shadow:0 0 10px var(--cyan),0 0 22px rgba(53,225,208,.55)}
-
-input[type=range]{width:100%;accent-color:var(--cyan);height:8px}
-.rangeLine{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:8px}
-
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
-button.action{
-  min-height:52px;border:1px solid #344064;border-radius:16px;background:#111a31;color:var(--text);
-  font-size:14px;font-weight:900;letter-spacing:.4px;cursor:pointer;
-}
-button.trigger{
-  background:linear-gradient(100deg,#7188ff,#35d9cf);color:#050914;border:0;
-  box-shadow:0 0 22px rgba(53,225,208,.16);
-}
-button:active{transform:scale(.98)}
-button:disabled{opacity:.45;cursor:not-allowed}
-
-.effect{
-  margin-top:16px;border-radius:17px;border:1px solid #28375e;background:#080e20;
-  padding:13px;text-align:center;min-height:58px;
-}
-.effectBar{
-  height:5px;border-radius:99px;background:#1e2a4a;overflow:hidden;margin-top:9px;
-}
-.effectBar b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green));transition:width .15s}
-.log{margin-top:13px;color:var(--muted);font-size:11px;text-align:center;min-height:16px}
-.note{margin-top:14px;color:#66728f;font-size:10px;line-height:1.45;text-align:center}
-
-@media (min-width:700px){
-  .app{max-width:620px;padding-top:30px}
-  .panel{padding:22px}
-}
+:root{--bg:#050914;--panel:#0b1226;--line:#29385f;--text:#f4f7ff;--muted:#8995b4;--cyan:#36e1d0;--blue:#7088ff;--green:#43f19a;--pink:#ff6388}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{min-height:100vh;display:flex;justify-content:center}.app{width:100%;max-width:520px;min-height:100vh;padding:17px 14px 28px;background:radial-gradient(circle at 50% -10%,#526dff25,transparent 40%),linear-gradient(#091021,#050914)}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}.brand h1{font-size:24px;margin:0;font-weight:900;letter-spacing:1px}.brand p{font-size:10px;color:var(--muted);margin:4px 0;letter-spacing:1.4px}.status{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:900;color:var(--muted)}.led{width:11px;height:11px;border-radius:50%;background:var(--pink)}.led.on{background:var(--green);box-shadow:0 0 8px var(--green),0 0 20px #43f19a99;animation:blink 1s infinite}@keyframes blink{50%{opacity:.45}}
+.panel{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:25px;padding:18px 16px 19px;background:#0b1226f5}.panel:before{content:"";position:absolute;inset:-2px;border-radius:27px;padding:1.5px;background:conic-gradient(from 0deg,transparent 0 65%,#36e1d0 74%,#7088ff 82%,transparent 90%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 3s linear infinite;pointer-events:none}.panel.active:before{background:conic-gradient(from 0deg,transparent 0 27%,#43f19a 45%,#36e1d0 55%,#7088ff 66%,#ff6388 73%,transparent 82%);animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.label{font-size:12px;color:var(--muted);font-weight:900;letter-spacing:1.2px}.connect{display:flex;align-items:center;justify-content:space-between;margin:7px 0 18px}.connect strong{font-size:16px}.connect small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.toggle{width:68px;height:38px;border:1px solid #3b486f;border-radius:99px;background:#171e36;padding:3px;cursor:pointer}.toggle i{display:block;width:30px;height:30px;border-radius:50%;background:#a6aec2;transition:.2s}.toggle.on{border-color:var(--green);box-shadow:0 0 14px #43f19a33}.toggle.on i{transform:translateX(30px);background:var(--green);box-shadow:0 0 9px var(--green),0 0 20px #43f19a88}
+.hz{text-align:center;font-size:64px;font-weight:900;line-height:1;margin:15px 0 2px}.unit{text-align:center;color:var(--muted);font-size:12px;margin-bottom:14px}input[type=range]{width:100%;accent-color:var(--cyan)}.range{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:6px}
+.message{display:flex;gap:7px;margin-top:17px}.message input{flex:1;min-width:0;height:49px;border:1px solid #344064;border-radius:14px;background:#080e20;color:var(--text);padding:0 12px;outline:none}.message button,.actions button{height:49px;border-radius:14px;font-weight:900;cursor:pointer}.message button{width:92px;border:0;background:linear-gradient(100deg,#7088ff,#36d9cf);color:#050914}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.actions button{border:1px solid #344064;background:#111a31;color:var(--text)}.actions .active{border-color:var(--green);box-shadow:0 0 15px #43f19a22}
+.signal{margin-top:14px;padding:12px;border:1px solid #28375e;border-radius:16px;background:#080e20;text-align:center}.bar{height:5px;background:#1e2a4b;border-radius:99px;overflow:hidden;margin-top:9px}.bar b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--green));transition:width .15s}.particles{height:42px;position:relative;overflow:hidden}.particle{position:absolute;bottom:2px;width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 9px var(--cyan);animation:particle .8s linear forwards}@keyframes particle{to{transform:translate(var(--x),-38px) scale(.15);opacity:0}}
+.network{margin-top:14px;border:1px solid #28375e;border-radius:17px;padding:13px;background:#080e20}.networkHead{display:flex;justify-content:space-between;align-items:center}.count{font-size:22px;font-weight:900}.spots{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px;min-height:24px}.spot{display:flex;align-items:center;gap:6px;background:#101a32;border:1px solid #28385e;border-radius:99px;padding:5px 9px;font-size:10px;color:#b8c1d8}.spot i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1s infinite}.empty{color:#66728f;font-size:11px}.log{text-align:center;color:var(--muted);font-size:11px;margin-top:9px;min-height:16px}.note{text-align:center;color:#626e89;font-size:10px;line-height:1.4;margin-top:11px}
+@media(max-width:360px){.app{padding-left:10px;padding-right:10px}.panel{padding-left:13px;padding-right:13px}.hz{font-size:58px}}
 </style>
 </head>
 <body>
 <main class="app">
-  <header class="top">
-    <div class="brand">
-      <h1>NEURO SYNC V8</h1>
-      <p>UNIVERSAL CONNECTION</p>
-    </div>
-    <div class="status"><span id="dot" class="dot"></span><span id="status">OFFLINE</span></div>
-  </header>
-
-  <section id="panel" class="panel">
-    <div class="label">ONE CONTROL PANEL</div>
-
-    <div class="switchRow">
-      <div class="switchText">
-        <strong>NETWORK CONNECTION</strong>
-        <span id="connText">Tap to connect</span>
-      </div>
-      <button id="switch" class="switch" aria-label="Connect or disconnect"><i></i></button>
-    </div>
-
-    <div class="label">FREQUENCY</div>
-    <div id="hzValue" class="value">10</div>
-    <div class="unit">Hz · digital network signal</div>
-    <input id="hz" type="range" min="1" max="20" step="1" value="10">
-    <div class="rangeLine"><span>1 Hz</span><span>20 Hz</span></div>
-
-    <div class="actions">
-      <button id="trigger" class="action trigger">TRIGGER MESSAGE</button>
-      <button id="stream" class="action">START STREAM</button>
-    </div>
-
-    <div class="effect">
-      <div id="effectText">READY</div>
-      <div class="effectBar"><b id="bar"></b></div>
-    </div>
-
-    <div id="log" class="log"></div>
-    <div class="note">The frequency shown here is a digital network event value. It is not EEG or direct brain-signal detection.</div>
-  </section>
+<header class="top"><div class="brand"><h1>NEURO SYNC V8</h1><p>UNIVERSAL CONNECTION</p></div><div class="status"><i id="led" class="led"></i><span id="status">OFFLINE</span></div></header>
+<section id="panel" class="panel">
+<div class="label">ACTIVE CONNECTION</div>
+<div class="connect"><div><strong id="connectTitle">CONNECT</strong><small id="connectSub">Tap ON to join the relay</small></div><button id="toggle" class="toggle" aria-label="connection"><i></i></button></div>
+<div class="label">FREQUENCY</div><div id="hzText" class="hz">10</div><div class="unit">Hz · shared digital event</div>
+<input id="hz" type="range" min="1" max="20" value="10"><div class="range"><span>1 Hz</span><span>20 Hz</span></div>
+<div class="message"><input id="message" maxlength="500" placeholder="Message to connected devices"><button id="send">SEND</button></div>
+<div class="actions"><button id="trigger">TRIGGER</button><button id="stream">START STREAM</button></div>
+<div class="signal"><div id="signalText">READY</div><div class="bar"><b id="bar"></b></div><div id="particles" class="particles"></div></div>
+<div class="network"><div class="networkHead"><span class="label">ACTIVE DEVICES</span><span id="count" class="count">0</span></div><div id="spots" class="spots"><span class="empty">No connected devices</span></div></div>
+<div id="log" class="log">Offline</div>
+<div class="note">Green spots show connected WebSocket devices that have joined this relay. Light particles are a visual network effect; this app does not detect or transmit thoughts or actual brain signals.</div>
+</section>
 </main>
-
 <script>
-const WSS = "wss://comn-setelite.univonra.workers.dev/ws";
-let ws = null, streamTimer = null;
-const id = "v8-" + Math.random().toString(36).slice(2,10);
-
-const $ = s => document.querySelector(s);
-const panel = $("#panel"), dot=$("#dot"), status=$("#status"), connText=$("#connText");
-const sw=$("#switch"), hz=$("#hz"), hzValue=$("#hzValue"), trigger=$("#trigger"), stream=$("#stream");
-const effectText=$("#effectText"), bar=$("#bar"), log=$("#log");
-
-function setConnected(on){
-  sw.classList.toggle("on",on);
-  panel.classList.toggle("active",on);
-  dot.classList.toggle("on",on);
-  status.textContent=on ? "ONLINE" : "OFFLINE";
-  connText.textContent=on ? "Connected to satellite relay" : "Tap to connect";
-  trigger.disabled=!on;
-  stream.disabled=!on;
-}
-function writeLog(t){ log.textContent=t; }
-
-function connect(){
-  if(ws && ws.readyState===WebSocket.OPEN) return;
-  writeLog("Connecting…");
-  try{
-    ws=new WebSocket(WSS);
-    ws.onopen=()=>{
-      setConnected(true);
-      ws.send(JSON.stringify({type:"presence",optIn:false,deviceId:id}));
-      writeLog("Satellite relay connected");
-    };
-    ws.onmessage=e=>{
-      try{
-        const p=JSON.parse(e.data);
-        if(p.type==="frequency"){
-          effect(p.hz);
-          writeLog("Received "+p.hz+" Hz signal");
-        }else if(p.type==="presence"){
-          writeLog((p.online||0)+" device(s) online");
-        }
-      }catch{}
-    };
-    ws.onerror=()=>writeLog("Connection error");
-    ws.onclose=()=>{
-      stopStream();
-      ws=null;
-      setConnected(false);
-      writeLog("Disconnected");
-    };
-  }catch(e){ setConnected(false); writeLog("Unable to connect"); }
-}
-function disconnect(){
-  stopStream();
-  if(ws){ try{ws.close();}catch{} ws=null; }
-  setConnected(false);
-  writeLog("Disconnected");
-}
-function sendFrequency(){
-  const f=Number(hz.value);
-  if(!ws || ws.readyState!==WebSocket.OPEN){writeLog("Connect first");return}
-  ws.send(JSON.stringify({type:"frequency",hz:f,source:"NEURO-SYNC-V8",deviceId:id}));
-  effect(f);
-  writeLog("Triggered "+f+" Hz to connected devices");
-}
-function effect(f){
-  const pct=Math.max(5,Math.min(100,f/20*100));
-  bar.style.width=pct+"%";
-  effectText.textContent="SIGNAL • "+f+" Hz";
-  clearTimeout(effect._t);
-  effect._t=setTimeout(()=>{effectText.textContent="READY"},700);
-}
-function startStream(){
-  if(streamTimer)return;
-  stream.textContent="STOP STREAM";
-  streamTimer=setInterval(sendFrequency,Math.max(100,1000/Number(hz.value)));
-  writeLog("Live frequency stream started");
-}
-function stopStream(){
-  if(streamTimer){clearInterval(streamTimer);streamTimer=null;}
-  stream.textContent="START STREAM";
-}
-
-sw.onclick=()=> (ws && ws.readyState===WebSocket.OPEN) ? disconnect() : connect();
-hz.oninput=()=>{
-  hzValue.textContent=hz.value;
-  if(streamTimer){stopStream();startStream();}
-  effect(Number(hz.value));
-};
-trigger.onclick=sendFrequency;
-stream.onclick=()=>streamTimer ? stopStream() : startStream();
-
-setConnected(false);
+const WSS="wss://comn-setelite.univonra.workers.dev/ws";
+const deviceId="v8-"+Math.random().toString(36).slice(2,10);
+let ws=null,timer=null;
+const $=x=>document.querySelector(x), panel=$("#panel"),led=$("#led"),status=$("#status"),toggle=$("#toggle"),connectTitle=$("#connectTitle"),connectSub=$("#connectSub"),hz=$("#hz"),hzText=$("#hzText"),message=$("#message"),send=$("#send"),trigger=$("#trigger"),stream=$("#stream"),signalText=$("#signalText"),bar=$("#bar"),particles=$("#particles"),count=$("#count"),spots=$("#spots"),log=$("#log");
+function ui(on){toggle.classList.toggle("on",on);panel.classList.toggle("active",on);led.classList.toggle("on",on);status.textContent=on?"ONLINE":"OFFLINE";connectTitle.textContent=on?"CONNECTED":"CONNECT";connectSub.textContent=on?"Relay active":"Tap ON to join the relay";send.disabled=trigger.disabled=stream.disabled=!on}
+function dots(n){count.textContent=n;spots.innerHTML="";if(!n){spots.innerHTML='<span class="empty">No connected devices</span>';return}for(let i=0;i<n;i++){let s=document.createElement("span");s.className="spot";s.innerHTML='<i></i>DEVICE '+(i+1);spots.appendChild(s)}}
+function burst(){for(let i=0;i<15;i++){let p=document.createElement("i");p.className="particle";p.style.left=(42+Math.random()*16)+"%";p.style.setProperty("--x",(Math.random()*180-90)+"px");particles.appendChild(p);setTimeout(()=>p.remove(),850)}}
+function signal(text,f){signalText.textContent=text;bar.style.width=Math.max(5,Math.min(100,f/20*100))+"%";burst();setTimeout(()=>signalText.textContent="READY",900)}
+function connect(){if(ws&&ws.readyState===1)return;log.textContent="Connecting to satellite relay…";try{ws=new WebSocket(WSS)}catch{log.textContent="WebSocket unavailable";return}ws.onopen=()=>{ui(true);ws.send(JSON.stringify({type:"presence",deviceId}));log.textContent="Connected — waiting for devices"};ws.onmessage=e=>{try{let p=JSON.parse(e.data);if(p.type==="presence"){dots(Number(p.online)||0)}else if(p.type==="frequency"){hz.value=p.hz;hzText.textContent=p.hz;signal("WAVE EVENT • "+p.hz+" Hz",p.hz);log.textContent="Frequency event received"}else if(p.type==="message"){signal("MESSAGE EVENT",+hz.value);log.textContent="Message received: "+p.text}}catch{}};ws.onerror=()=>log.textContent="Satellite relay error";ws.onclose=()=>{stop();ws=null;dots(0);ui(false);log.textContent="Disconnected"}}
+function disconnect(){stop();if(ws)try{ws.close()}catch{}ws=null;dots(0);ui(false);log.textContent="Disconnected"}
+function freq(){if(!ws||ws.readyState!==1){log.textContent="Connect first";return}let f=+hz.value;ws.send(JSON.stringify({type:"frequency",hz:f,source:"NEURO-SYNC-V8",deviceId}));signal("WAVE SENT • "+f+" Hz",f);log.textContent="Frequency event sent to connected devices"}
+function sendMessage(){let text=message.value.trim();if(!text)return;if(!ws||ws.readyState!==1){log.textContent="Connect first";return}ws.send(JSON.stringify({type:"message",text,deviceId}));signal("MESSAGE SENT",+hz.value);log.textContent="Message sent to connected devices";message.value=""}
+function start(){if(timer)return;timer=setInterval(freq,Math.max(150,1000/+hz.value));stream.classList.add("active");stream.textContent="STOP STREAM";log.textContent="Live event stream active"}
+function stop(){if(timer){clearInterval(timer);timer=null}stream.classList.remove("active");stream.textContent="START STREAM"}
+toggle.onclick=()=>ws&&ws.readyState===1?disconnect():connect();hz.oninput=()=>{hzText.textContent=hz.value;if(timer){stop();start()}};trigger.onclick=freq;send.onclick=sendMessage;stream.onclick=()=>timer?stop():start();message.onkeydown=e=>{if(e.key==="Enter")sendMessage()};ui(false);dots(0);
 </script>
 </body>
 </html>
