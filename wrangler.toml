@@ -7,8 +7,8 @@ directory = "./public"
 binding = "ASSETS"
 
 [durable_objects]
-bindings = [{ name = "Neuro-8", class_name = "Neuro-8" }]
+bindings = [{ name = "NEURO_ROOM", class_name = "NeuroSyncRoom" }]
 
 [[migrations]]
 tag = "v1"
-new_sqlite_classes = ["Neuro-8"]
+new_sqlite_classes = ["NeuroSyncRoom"]

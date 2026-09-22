@@ -1,29 +1,29 @@
-CLOUDFLARE FIX — CURRENT ERROR
+NEURO SYNC V8 — FINAL CLOUDFLARE FIX
 
-Your screenshot's current error is:
-"Version of script does not export class 'NeuroSyncRoom'"
+Your Cloudflare screenshot shows that the Worker already has an existing Durable Object class named NeuroSyncRoom.
+The previous package incorrectly tried to change that existing class to NeuroRoom. Cloudflare therefore rejected the deploy.
 
-This package fixes that mismatch.
+This package keeps the EXISTING class name NeuroSyncRoom. No Durable Object rename is being attempted.
 
-wrangler.toml uses:
-  class_name = "NeuroRoom"
+Use these files in the GitHub repository univonra0000/neuro_v8 on the main branch.
 
-src/worker.js exports:
-  export class NeuroRoom extends DurableObject
+Required files:
+- src/worker.js exports: NeuroSyncRoom
+- wrangler.toml binding class_name: NeuroSyncRoom
+- wrangler.toml migration v1: NeuroSyncRoom
+- compatibility_date: 2026-09-20
 
-IMPORTANT:
-Because Cloudflare is connected to GitHub, replace/commit these files into:
-  univonra0000/neuro_v8
-  branch: main
-
-Then Retry deployment.
-
-Workers Builds:
+Cloudflare Build settings:
 Build command: None
 Deploy command: npx wrangler deploy
 Root directory: /
 
-The compatibility date is:
-2026-09-20
+IMPORTANT:
+1. Replace the existing src/worker.js and wrangler.toml in GitHub.
+2. Commit the changes to main.
+3. Retry the Cloudflare build.
+4. Do not manually change NeuroSyncRoom to NeuroRoom.
 
-Do NOT use NeuroSyncRoom in wrangler.toml.
+The error in the screenshot was:
+New version of script does not export class 'NeuroSyncRoom' which is depended on by existing...
+This final package fixes that exact problem by exporting the existing class name.
