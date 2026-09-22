@@ -25,23 +25,40 @@ input[type=range]{width:100%;accent-color:var(--pink)}input[type=text]{width:100
 .note{font-size:11px;color:#9ea5c8;line-height:1.45}
 footer{text-align:center;color:#777b9d;padding:20px;font-size:11px}
 @media(max-width:600px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.top{padding:10px}.brand{font-size:14px}.sub{display:none}nav{top:52px}.card{padding:13px}}
+
+/* V8.1 responsive controls */
+@media(max-width:760px){
+  .top{gap:7px}.brand{font-size:15px}
+  .conn{gap:5px}.conn #state{display:none}.onoff{min-width:68px;padding:10px 11px}
+  nav{top:56px;padding:8px 9px;gap:6px}
+  nav button{font-size:12px;padding:9px 10px}
+  main{padding:10px}.grid{grid-template-columns:1fr;gap:10px}
+  .card{border-radius:16px}.row{flex-wrap:wrap}.row>*{min-width:120px}
+  .trigger{min-height:92px}.map{height:230px}
+}
+@media(min-width:761px){
+  main{padding:20px}.card{padding:18px}
+}
 </style>
 </head>
 <body>
 <header><div class="top">
-  <div><div class="brand">NEURO SYNC V8</div><div class="sub">DIGITAL SIGNAL • PAST / PRESENT / FUTURE</div></div>
+  <div><div class="brand">NEURO SYNC V8</div><div class="sub">DIGITAL PARTICIPANT NETWORK • PAST / PRESENT / FUTURE</div></div>
   <div class="conn"><span class="led" id="led"></span><span id="state">OFFLINE</span><button id="toggle" class="onoff off">OFF</button></div>
 </div></header>
 
 <nav>
-<button onclick="go('dash')">Dashboard</button><button onclick="go('messages')">Messages</button><button onclick="go('signal')">Signal</button><button onclick="go('map')">Map</button><button onclick="go('settings')">Settings</button>
+<button onclick="go('dash')">Dashboard</button><button onclick="go('messages')">People / Messages</button><button onclick="go('signal')">Signal</button><button onclick="go('map')">Map</button><button onclick="go('settings')">Settings</button>
 </nav>
 
 <main>
 <section id="dash" class="grid">
-<div class="card wide"><h2>Connection</h2><div class="statusline"><span class="led" id="led2"></span><span id="connectionText">Tap ON to connect</span><span class="pill">same Worker /ws</span></div><p class="muted">Only devices that open the app and connect voluntarily are counted.</p></div>
-<div class="card"><h3>Connected devices</h3><div class="big" id="count">0</div><div class="muted">live WebSocket connections</div></div>
+<div class="card wide"><h2>Connection</h2><div class="statusline"><span class="led" id="led2"></span><span id="connectionText">Tap ON to connect</span><span class="pill">same Worker /ws</span></div><p class="muted">Only people/devices that open the app and connect voluntarily are counted.</p></div>
+<div class="card"><h3>Connected participants</h3><div class="big" id="count">0</div><div class="muted">live participating connections</div></div>
 <div class="card"><h3>Last response</h3><div id="last">Waiting…</div></div>
+<div class="card"><h3>Responses completed</h3><div class="big" id="responseCount">0</div><div class="muted">messages + signal responses</div></div>
+<div class="card"><h3>People network</h3><button id="connectPeople" class="onoff" style="width:100%">CONNECT TO PEOPLE</button><p class="note">Connects this app to other participating clients. It does not detect private people or brains.</p></div>
+<div class="card wide"><h3>Live people map</h3><div class="map" id="mapboxDash"></div><p class="note">Green = online participant with location sharing. White = recently seen participant who is now offline.</p></div>
 <div class="card wide"><h3>Voice / Mic</h3><div class="row"><button id="mic">🎙️ Mic OFF</button><button id="speak">🔊 Speak response</button></div><p class="note">Voice recognition uses the browser microphone permission. The app waits for a completed voice result before sending a response event.</p></div>
 </section>
 
@@ -57,18 +74,18 @@ footer{text-align:center;color:#777b9d;padding:20px;font-size:11px}
 </section>
 
 <section id="map" class="grid">
-<div class="card wide"><h2>Participant map</h2><div class="map" id="mapbox"></div><p class="note">Location is displayed only after the participant explicitly enables location sharing. No hidden location tracking.</p><button id="loc">📍 Enable my location</button></div>
+<div class="card wide"><h2>People / Participant Map</h2><div class="map" id="mapbox"></div><p class="note">Location is displayed only after the participant explicitly enables location sharing. No hidden location tracking.</p><button id="loc">📍 Enable my location</button></div>
 </section>
 
 <section id="settings" class="grid">
-<div class="card wide"><h2>Settings / Safety</h2><p class="note">This build uses the NEURO V8 Worker directly: <b>neuro-v8.univonra.workers.dev</b>. It does not require the old satellite relay Worker. Internet/mobile WebSocket transport carries digital messages and events. Actual brain-signal detection requires compatible EEG/BCI hardware.</p></div>
+<div class="card wide"><h2>Settings / Safety</h2><p class="note">The correct user-facing term for people connected to the app is <b>CONNECTED PARTICIPANTS</b> (or <b>PEOPLE ONLINE</b>), not “connected brains”.<br><br>This build uses the NEURO V8 Worker directly: <b>neuro-v8.univonra.workers.dev</b>. It does not require the old satellite relay Worker. Internet/mobile WebSocket transport carries digital messages and events. Actual brain-signal detection requires compatible EEG/BCI hardware.</p></div>
 </section>
 </main>
 <footer>NEURO SYNC V8 • Digital network synchronization</footer>
 
 <script>
 let ws=null, wanted=false, retry=null, deviceId="v8-"+Math.random().toString(36).slice(2,10);
-let micOn=false, recognition=null, locationOptIn=false, autoTimer=null;
+let micOn=false, recognition=null, locationOptIn=false, autoTimer=null, responseCount=0;
 
 const $=id=>document.getElementById(id);
 function go(id){document.getElementById(id).scrollIntoView({behavior:"smooth",block:"start"})}
@@ -84,8 +101,8 @@ function connect(){
   ws.onopen=()=>{ui(true,"Live connection active");log("Connected to NEURO V8","SYSTEM");send({type:"presence"});if(locationOptIn)sendLocation()}
   ws.onmessage=e=>{let p;try{p=JSON.parse(e.data)}catch{return}
     if(p.type==="presence"){$("count").textContent=p.online??0;drawMap(p.participants||[]);$("last").textContent="Presence updated • "+(p.online??0)+" connected"}
-    if(p.type==="frequency"){wave();beep();$("last").textContent=p.hz+" Hz response received";log(p.hz+" Hz signal received",p.deviceId||"DEVICE")}
-    if(p.type==="message"){beep();$("last").textContent="Message received";log(p.text,p.deviceId||"DEVICE")}
+    if(p.type==="frequency"){responseCount++;$("responseCount").textContent=responseCount;wave();beep();$("last").textContent=p.hz+" Hz response received";log(p.hz+" Hz signal received",p.deviceId||"PARTICIPANT")}
+    if(p.type==="message"){responseCount++;$("responseCount").textContent=responseCount;beep();$("last").textContent="Message response received";log(p.text,p.deviceId||"PARTICIPANT")}
   };
   ws.onclose=()=>{ui(false,"Disconnected — reconnecting");log("Connection closed","SYSTEM");if(wanted)schedule()}
   ws.onerror=()=>{ui(false,"Connection error — retrying")}
@@ -127,9 +144,21 @@ function sendLocation(){
 }
 function drawMe(lat,lon){let b=$("mapbox");let d=document.querySelector(".dot.me");if(!d){d=document.createElement("div");d.className="dot me";b.appendChild(d)}d.style.left=((lon+180)/360*100)+"%";d.style.top=((90-lat)/180*100)+"%"}
 function drawMap(parts){
-  let b=$("mapbox");b.querySelectorAll(".remote-dot").forEach(x=>x.remove());
-  (parts||[]).forEach(p=>{if(!p.locationOptIn||p.lat==null||p.lon==null)return;let d=document.createElement("div");d.className="dot remote-dot";d.title=p.deviceId;d.style.left=((p.lon+180)/360*100)+"%";d.style.top=((90-p.lat)/180*100)+"%";b.appendChild(d)})
+  const boxes=[$("mapbox"),$("mapboxDash")].filter(Boolean);
+  boxes.forEach(b=>{
+    b.querySelectorAll(".remote-dot").forEach(x=>x.remove());
+    (parts||[]).forEach(p=>{
+      if(!p.locationOptIn||p.lat==null||p.lon==null)return;
+      let d=document.createElement("div");
+      d.className="dot remote-dot"+(p.online?"":" off");
+      d.title=(p.online?"ONLINE: ":"OFFLINE: ")+p.deviceId;
+      d.style.left=((p.lon+180)/360*100)+"%";
+      d.style.top=((90-p.lat)/180*100)+"%";
+      b.appendChild(d);
+    });
+  });
 }
+$("connectPeople").onclick=()=>{connect();go("messages");};
 connect();
 </script>
 </body>
