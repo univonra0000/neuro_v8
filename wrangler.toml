@@ -7,7 +7,9 @@ directory = "./public"
 binding = "ASSETS"
 
 [durable_objects]
-bindings = [{ name = "NEURO_ROOM", class_name = "NeuroRoom" }]
+bindings = [
+  { name = "NEURO_ROOM", class_name = "NeuroRoom" }
+]
 
 [[migrations]]
 tag = "v1"
