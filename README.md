@@ -1,16 +1,14 @@
-# NEURO SYNC V8
+# NEURO SYNC V8 — all-in-one
 
-Cloudflare Workers static web app for the `neuro-v8` Worker.
+This version puts the frontend and WebSocket/Durable Object backend in the SAME Cloudflare Worker:
 
-Satellite relay:
-`wss://comn-setelite.univonra.workers.dev/ws`
+https://neuro-v8.univonra.workers.dev/
 
-Cloudflare Builds can deploy this repository with:
+WebSocket:
+wss://neuro-v8.univonra.workers.dev/ws
 
-`npx wrangler deploy`
+No separate satellite Worker is required for this version.
 
-The app is served from `public/`.
+Deploy from the repository root with Cloudflare Workers. The static app is in `public/` and the Worker backend is in `src/worker.js`.
 
-Important: `comn-setelite` is the separate WebSocket/Durable Object relay. Its Durable Object binding should NOT be placed in this `neuro-v8` app configuration.
-
-The app is mobile responsive and includes connection ON/OFF, optional location sharing/map, online-device count, and 1–20 Hz digital network frequency events.
+The network synchronizes digital frequency events, messages, and connected-device counts. It does not detect or transmit thoughts or EEG without external BCI/EEG hardware.
